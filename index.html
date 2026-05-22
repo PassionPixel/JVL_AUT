@@ -23,13 +23,20 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--navy);
   color: var(--white);
   overflow-x: hidden;
   cursor: none;
+  overscroll-behavior-y: none;
+}
+@media (max-width: 900px) {
+  body { -webkit-overflow-scrolling: touch; }
 }
 
 /* ── MAGNETIC CURSOR ── */
@@ -1273,10 +1280,17 @@ window.addEventListener('scroll', () => {
     my = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
+  // Use a real clock so speed is frame-rate independent
+  const clock = new THREE.Clock();
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  // Desktop gets half the speed (felt too fast); mobile keeps the natural pace
+  const speedScale = isMobile ? 1.0 : 0.45;
+
   let time = 0;
   function animate() {
     requestAnimationFrame(animate);
-    time += 0.008;
+    const delta = Math.min(clock.getDelta(), 0.05); // cap to avoid big jumps
+    time += delta * speedScale;
 
     // Morphing sphere
     const pos = geoSphere.attributes.position;
@@ -1305,7 +1319,7 @@ window.addEventListener('scroll', () => {
     // Particles orbit
     const pPos = pGeom.attributes.position;
     for (let i = 0; i < particleCount; i++) {
-      pThetas[i] += pSpeeds[i];
+      pThetas[i] += pSpeeds[i] * speedScale;
       pPos.setXYZ(i,
         pRadii[i] * Math.sin(pPhis[i]) * Math.cos(pThetas[i]),
         pRadii[i] * Math.sin(pPhis[i]) * Math.sin(pThetas[i]),
@@ -1314,9 +1328,11 @@ window.addEventListener('scroll', () => {
     }
     pPos.needsUpdate = true;
 
-    // Mouse parallax camera
-    camera.position.x += (mx * 4 - camera.position.x) * 0.04;
-    camera.position.y += (-my * 2 - camera.position.y) * 0.04;
+    // Mouse parallax camera (desktop only)
+    if (!isMobile) {
+      camera.position.x += (mx * 4 - camera.position.x) * 0.04;
+      camera.position.y += (-my * 2 - camera.position.y) * 0.04;
+    }
     camera.lookAt(scene.position);
 
     // Pulse glow
@@ -1424,17 +1440,18 @@ document.getElementById('sendBtn').addEventListener('click', function() {
   setTimeout(() => { this.innerHTML = orig; this.style.background = ''; }, 3000);
 });
 
-// ── GSAP SCROLL PARALLAX ──
-gsap.to('#value .morph-container', {
-  y: -60,
-  ease: 'none',
-  scrollTrigger: { trigger: '#value', start: 'top bottom', end: 'bottom top', scrub: true }
-});
-gsap.to('.process-steps', {
-  y: -30,
-  ease: 'none',
-  scrollTrigger: { trigger: '#process', start: 'top bottom', end: 'bottom top', scrub: true }
-});
+// ── GSAP SCROLL PARALLAX (desktop only — causes jitter on mobile) ──
+const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (!isTouch) {
+  gsap.to('#value .morph-container', {
+    y: -60, ease: 'none',
+    scrollTrigger: { trigger: '#value', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+  gsap.to('.process-steps', {
+    y: -30, ease: 'none',
+    scrollTrigger: { trigger: '#process', start: 'top bottom', end: 'bottom top', scrub: 1 }
+  });
+}
 </script>
 </body>
 </html>
