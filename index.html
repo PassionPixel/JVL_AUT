@@ -1193,9 +1193,7 @@ footer {
           </div>
         </div>
       </div>
-      <form class="contact-form reveal" id="contactForm" style="transition-delay:0.15s" action="https://formspree.io/f/xojbwanw" method="POST">
-        <input type="hidden" name="_next" value="https://jvlautomation.com/#contact">
-        <input type="hidden" name="_subject" value="Nouvelle demande — JVL Automation">
+      <form class="contact-form reveal" id="contactForm" style="transition-delay:0.15s">
         <div class="form-row">
           <div class="fg"><label>Prénom *</label><input type="text" name="prenom" placeholder="Jean" required></div>
           <div class="fg"><label>Nom *</label><input type="text" name="nom" placeholder="Dupont" required></div>
@@ -1569,12 +1567,50 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 // ── FORM ──
-// ── FORMSPREE SUBMIT — feedback visuel avant envoi natif ──
-document.getElementById('contactForm').addEventListener('submit', function() {
+// ── FORMSPREE AJAX — pas de redirection ──
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
   const btn = document.getElementById('sendBtn');
-  btn.innerHTML = '✓ Envoi en cours...';
-  btn.style.background = '#10B981';
+  const origHTML = btn.innerHTML;
+
+  btn.innerHTML = 'Envoi en cours...';
   btn.disabled = true;
+  btn.style.opacity = '0.8';
+
+  const data = new FormData(this);
+
+  try {
+    const res = await fetch('https://formspree.io/f/xojbwanw', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      btn.innerHTML = '✓ Message envoyé !';
+      btn.style.background = '#10B981';
+      btn.style.opacity = '1';
+      this.reset();
+      setTimeout(() => {
+        btn.innerHTML = origHTML;
+        btn.style.background = '';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }, 4000);
+    } else {
+      const json = await res.json();
+      throw new Error(json?.errors?.[0]?.message || 'Erreur');
+    }
+  } catch(err) {
+    btn.innerHTML = '✗ Erreur — réessayez';
+    btn.style.background = '#EF4444';
+    btn.style.opacity = '1';
+    setTimeout(() => {
+      btn.innerHTML = origHTML;
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 3500);
+  }
 });
 
 // ── GSAP SCROLL PARALLAX (desktop only — causes jitter on mobile) ──
