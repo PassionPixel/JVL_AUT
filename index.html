@@ -373,32 +373,52 @@ h2 {
   background: rgba(14,165,233,0.03);
   padding: 52px 40px;
   border-right: 1px solid rgba(14,165,233,0.08);
-  transition: all 0.5s;
+  transition: background 0.5s, box-shadow 0.5s;
   position: relative; overflow: hidden;
 }
 .pstep:last-child { border-right: none; }
+/* top line */
 .pstep::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--electric), transparent);
-  transform: scaleX(0); transition: transform 0.5s;
+  transform: scaleX(0); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-.pstep:hover { background: rgba(14,165,233,0.06); }
+/* bottom glow on hover */
+.pstep::after {
+  content: '';
+  position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 80px;
+  background: radial-gradient(ellipse, rgba(14,165,233,0.18), transparent 70%);
+  opacity: 0; transition: opacity 0.5s;
+  pointer-events: none;
+}
+.pstep:hover { background: rgba(14,165,233,0.07); }
 .pstep:hover::before { transform: scaleX(1); }
+.pstep:hover::after { opacity: 1; }
 .pstep-num {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900; font-size: 72px;
-  color: rgba(14,165,233,0.08);
+  color: rgba(14,165,233,0.22);
   line-height: 1; margin-bottom: 20px;
-  transition: color 0.4s;
+  transition: color 0.4s, text-shadow 0.4s;
 }
-.pstep:hover .pstep-num { color: rgba(14,165,233,0.15); }
+.pstep:hover .pstep-num {
+  color: rgba(14,165,233,0.45);
+  text-shadow: 0 0 40px rgba(14,165,233,0.25);
+}
 .pstep-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700; font-size: 20px;
   color: var(--white); margin-bottom: 12px;
+  transition: color 0.3s;
 }
-.pstep-desc { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; }
+.pstep:hover .pstep-title { color: var(--electric-light); }
+.pstep-desc {
+  font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7;
+  transition: color 0.3s;
+}
+.pstep:hover .pstep-desc { color: rgba(255,255,255,0.6); }
 
 /* ── SERVICES ── */
 #services { background: var(--navy); }
