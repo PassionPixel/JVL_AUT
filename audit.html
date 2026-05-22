@@ -301,7 +301,15 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.04);
   padding: 40px 64px; text-align: center;
 }
-.footer-copy { color: rgba(255,255,255,0.2); font-size: 12px; }
+.footer-copy {
+  color: rgba(255,255,255,0.2); font-size: 12px;
+  transition: color 0.2s, text-shadow 0.2s;
+  cursor: default !important;
+}
+.footer-copy:hover {
+  color: #FB923C;
+  text-shadow: 0 0 20px rgba(251,146,60,0.4);
+}
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
@@ -565,7 +573,7 @@ footer {
 </div>
 
 <footer>
-  <div class="footer-copy">© 2026 JVL Automation · Automation & AI Solutions · <a href="/" style="color:rgba(255,255,255,0.3);text-decoration:none">jvlautomation.com</a></div>
+  <div class="footer-copy">© 2026 JVL Automation · Automation & AI Solutions</div>
 </footer>
 
 <script>
