@@ -437,33 +437,34 @@ h2 {
   border-radius: 18px;
   padding: 32px;
   background: rgba(255,255,255,0.02);
-  transition: border-color 0.4s cubic-bezier(0.16,1,0.3,1),
-              transform 0.4s cubic-bezier(0.16,1,0.3,1),
-              box-shadow 0.4s cubic-bezier(0.16,1,0.3,1),
-              background 0.4s;
+  transition: border-color 0.15s ease, transform 0.2s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.15s ease, background 0.15s ease;
   position: relative; overflow: hidden;
 }
-/* top-left corner glow on hover */
+/* Spotlight that follows mouse — set via JS */
 .scard::before {
   content: '';
-  position: absolute; top: 0; left: 0;
-  width: 120px; height: 120px;
-  background: radial-gradient(circle at top left, rgba(14,165,233,0.18), transparent 70%);
-  opacity: 0; transition: opacity 0.4s;
+  position: absolute;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,165,233,0.14), transparent 70%);
+  transform: translate(-50%, -50%);
+  top: var(--my, 50%); left: var(--mx, 50%);
+  opacity: 0; transition: opacity 0.15s;
   pointer-events: none;
 }
-/* subtle inner gradient */
+/* top border glow */
 .scard::after {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(14,165,233,0.05), transparent 60%);
-  opacity: 0; transition: opacity 0.4s;
+  position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14,165,233,0.6), transparent);
+  opacity: 0; transition: opacity 0.15s;
   pointer-events: none;
 }
 .scard:hover {
-  border-color: rgba(14,165,233,0.28);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(14,165,233,0.08);
+  border-color: rgba(14,165,233,0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(14,165,233,0.1);
   background: rgba(14,165,233,0.03);
 }
 .scard:hover::before { opacity: 1; }
@@ -471,30 +472,30 @@ h2 {
 .scard-icon {
   font-size: 28px; margin-bottom: 20px;
   display: inline-block;
-  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), filter 0.15s;
 }
-.scard:hover .scard-icon { transform: scale(1.15) translateY(-2px); }
+.scard:hover .scard-icon { transform: scale(1.18) translateY(-2px); filter: drop-shadow(0 0 8px rgba(14,165,233,0.5)); }
 .scard-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700; font-size: 16px; color: var(--white);
   margin-bottom: 14px;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
 .scard:hover .scard-title { color: var(--electric-light); }
 .scard-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
 .scard-feats li {
   font-size: 13px; color: rgba(255,255,255,0.45);
   display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
-.scard:hover .scard-feats li { color: rgba(255,255,255,0.62); }
+.scard:hover .scard-feats li { color: rgba(255,255,255,0.68); }
 .scard-feats li::before { content: '→'; color: var(--electric); flex-shrink: 0; font-weight: 700; }
 .scard-cta {
   font-size: 13px; font-weight: 600; color: var(--electric);
   text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-  transition: gap 0.25s, color 0.25s;
+  transition: gap 0.15s, color 0.15s;
 }
-.scard:hover .scard-cta { gap: 10px; color: var(--electric-light); }
+.scard:hover .scard-cta { gap: 12px; color: var(--electric-light); }
 .scard.hero-card {
   background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(14,165,233,0.04));
   border-color: rgba(14,165,233,0.2);
@@ -518,31 +519,32 @@ h2 {
   background: rgba(14,165,233,0.04);
   padding: 14px 26px; border-radius: 100px;
   font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.65);
-  transition: border-color 0.35s, color 0.35s, transform 0.35s cubic-bezier(0.16,1,0.3,1),
-              box-shadow 0.35s, background 0.35s;
+  transition: border-color 0.12s, color 0.12s, transform 0.18s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.12s, background 0.12s;
   position: relative; overflow: hidden;
 }
 .spill::before {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 120%, rgba(14,165,233,0.18), transparent 65%);
-  opacity: 0; transition: opacity 0.35s;
+  background: radial-gradient(circle at 50% 100%, rgba(14,165,233,0.2), transparent 65%);
+  opacity: 0; transition: opacity 0.12s;
 }
 .spill:hover {
-  border-color: rgba(14,165,233,0.5);
+  border-color: rgba(14,165,233,0.55);
   color: var(--white);
-  background: rgba(14,165,233,0.08);
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 8px 28px rgba(14,165,233,0.18), 0 0 0 1px rgba(14,165,233,0.1);
+  background: rgba(14,165,233,0.1);
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(14,165,233,0.22), 0 0 0 1px rgba(14,165,233,0.15),
+              inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .spill:hover::before { opacity: 1; }
 .spill-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--electric); flex-shrink: 0;
-  transition: box-shadow 0.35s, transform 0.35s;
+  transition: box-shadow 0.12s, transform 0.18s;
 }
 .spill:hover .spill-dot {
-  box-shadow: 0 0 8px rgba(14,165,233,0.8);
-  transform: scale(1.3);
+  box-shadow: 0 0 10px rgba(14,165,233,0.9), 0 0 20px rgba(14,165,233,0.4);
+  transform: scale(1.4);
 }
 
 /* ── PRICING ── */
@@ -558,34 +560,33 @@ h2 {
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 20px; padding: 44px;
   background: rgba(255,255,255,0.02);
-  transition: border-color 0.4s, transform 0.4s cubic-bezier(0.16,1,0.3,1),
-              box-shadow 0.4s, background 0.4s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   position: relative; overflow: hidden;
 }
-/* left accent bar */
+/* Shimmer sweep on hover */
 .pcard::before {
   content: '';
-  position: absolute; top: 20%; left: 0;
-  width: 2px; height: 60%;
-  background: linear-gradient(to bottom, transparent, var(--electric), transparent);
-  opacity: 0; transition: opacity 0.4s;
+  position: absolute; top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(14,165,233,0.06), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
 }
-/* corner glow */
+/* top glow line */
 .pcard::after {
   content: '';
-  position: absolute; bottom: -60px; right: -60px;
-  width: 180px; height: 180px;
-  background: radial-gradient(circle, rgba(14,165,233,0.12), transparent 70%);
-  opacity: 0; transition: opacity 0.4s;
+  position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14,165,233,0.7), transparent);
+  opacity: 0; transition: opacity 0.15s;
   pointer-events: none;
 }
 .pcard:hover {
-  border-color: rgba(14,165,233,0.25);
-  transform: translateY(-5px);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(14,165,233,0.08);
-  background: rgba(14,165,233,0.03);
+  border-color: rgba(14,165,233,0.28);
+  box-shadow: 0 0 40px rgba(14,165,233,0.07), 0 8px 32px rgba(0,0,0,0.25),
+              inset 0 1px 0 rgba(14,165,233,0.08);
+  background: rgba(14,165,233,0.04);
 }
-.pcard:hover::before { opacity: 1; }
+.pcard:hover::before { left: 140%; }
 .pcard:hover::after { opacity: 1; }
 .pcard.highlight {
   background: linear-gradient(145deg, rgba(14,165,233,0.1), rgba(14,165,233,0.03));
@@ -596,22 +597,22 @@ h2 {
 .pcard-name {
   font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 22px;
   color: var(--white); margin-bottom: 8px;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
 .pcard:hover .pcard-name { color: var(--electric-light); }
 .pcard-price {
   font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px;
   color: var(--electric-light); margin-bottom: 16px;
-  transition: text-shadow 0.3s;
+  transition: text-shadow 0.15s;
 }
-.pcard:hover .pcard-price { text-shadow: 0 0 30px rgba(14,165,233,0.35); }
+.pcard:hover .pcard-price { text-shadow: 0 0 28px rgba(14,165,233,0.4); }
 .pcard-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 32px; }
 .pcard-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .pcard-list li {
   font-size: 14px; color: rgba(255,255,255,0.55); display: flex; gap: 10px;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
-.pcard:hover .pcard-list li { color: rgba(255,255,255,0.75); }
+.pcard:hover .pcard-list li { color: rgba(255,255,255,0.78); }
 .pcard-list li::before { content: '✓'; color: var(--electric); font-weight: 700; flex-shrink: 0; }
 
 .audit-cta {
@@ -742,10 +743,12 @@ footer {
 .footer-copy { color: rgba(255,255,255,0.2); font-size: 12px; }
 
 /* ── REVEAL ── */
-.reveal { opacity: 0; transform: translateY(50px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
-.reveal.from-left { transform: translateX(-50px); }
-.reveal.from-right { transform: translateX(50px); }
-.reveal.visible { opacity: 1; transform: translate(0); }
+.reveal { opacity: 0; transform: translateY(40px); }
+.reveal.from-left { transform: translateX(-40px); }
+.reveal.from-right { transform: translateX(40px); }
+/* Reveal animation only — transition is set/unset by JS after visibility */
+.reveal.animating { transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translate(0,0); }
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
@@ -1503,12 +1506,31 @@ const reveals = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      revealObserver.unobserve(e.target);
+      const el = e.target;
+      el.classList.add('animating');
+      // Small rAF so the animating class (which adds transition) is painted first
+      requestAnimationFrame(() => {
+        el.classList.add('visible');
+      });
+      // After animation completes: strip transition-delay and animating so hover is instant
+      setTimeout(() => {
+        el.style.transitionDelay = '0s';
+        el.classList.remove('animating');
+      }, 900);
+      revealObserver.unobserve(el);
     }
   });
-}, { threshold: 0.1 });
+}, { threshold: 0.08 });
 reveals.forEach(el => revealObserver.observe(el));
+
+// ── SCARD SPOTLIGHT (mouse-tracking glow) ──
+document.querySelectorAll('.scard').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
 
 // ── FAQ ──
 document.querySelectorAll('.faq-q').forEach(q => {
