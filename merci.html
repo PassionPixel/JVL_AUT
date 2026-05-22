@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merci — JVL Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='5.5' fill='%2310B981'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='%236EE7B7'/%3E%3Ccircle cx='53' cy='11' r='3.5' fill='%236EE7B7'/%3E%3Ccircle cx='11' cy='53' r='3.5' fill='%236EE7B7'/%3E%3Ccircle cx='53' cy='53' r='3.5' fill='%236EE7B7'/%3E%3Ccircle cx='32' cy='4' r='2.5' fill='%2310B981'/%3E%3Ccircle cx='32' cy='60' r='2.5' fill='%2310B981'/%3E%3Ccircle cx='4' cy='32' r='2.5' fill='%2310B981'/%3E%3Ccircle cx='60' cy='32' r='2.5' fill='%2310B981'/%3E%3Cline x1='32' y1='26.5' x2='11' y2='11' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='32' y1='26.5' x2='53' y2='11' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='11' y2='53' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='53' y2='53' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='26.5' y1='32' x2='4' y2='32' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='37.5' y1='32' x2='60' y2='32' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='32' y1='26.5' x2='32' y2='4' stroke='%2310B981' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='32' y2='60' stroke='%2310B981' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>
+:root {
+  --navy: #0B1628;
+  --green: #10B981;
+  --green-light: #6EE7B7;
+  --green-dark: #059669;
+  --white: #ffffff;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-overflow-scrolling: touch; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+body * { cursor: none !important; }
+@media (max-width: 900px) {
+  body { cursor: auto; }
+  body * { cursor: auto !important; }
+}
+
+/* ── CURSOR ── */
+#cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  position: fixed; z-index: 9999;
+  pointer-events: none;
+  top: 0; left: 0;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s;
+  mix-blend-mode: screen;
+}
+#cursor-dot.hovering {
+  width: 48px; height: 48px;
+  background: rgba(16,185,129,0.3);
+  border: 1px solid var(--green);
+}
+@media (max-width: 900px) { #cursor-dot { display: none; } }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 64px;
+  background: rgba(11,22,40,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(16,185,129,0.1);
+}
+.logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.logo-mark { width: 42px; height: 42px; }
+.logo-mark svg { width: 100%; height: 100%; }
+.logo-name { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); letter-spacing: 2px; display: block; }
+.logo-sub { font-size: 9px; color: var(--green); letter-spacing: 0.5px; font-style: italic; opacity: 0.8; display: block; }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 10px 20px; border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-back:hover { border-color: var(--green); color: var(--green-light); }
+
+/* ── MAIN ── */
+main {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 120px 40px 80px;
+  text-align: center;
+}
+#three-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ── CONTENT ── */
+.content {
+  position: relative; z-index: 10;
+  max-width: 680px;
+}
+
+/* Animated checkmark */
+.check-wrap {
+  width: 100px; height: 100px;
+  margin: 0 auto 40px;
+  position: relative;
+  opacity: 0; transform: scale(0.5);
+}
+.check-circle {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.1);
+  border: 2px solid rgba(16,185,129,0.3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.check-circle::before {
+  content: '';
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(16,185,129,0.15);
+  animation: ripple 3s ease-in-out infinite;
+}
+.check-circle::after {
+  content: '';
+  position: absolute; inset: -16px;
+  border-radius: 50%;
+  border: 1px solid rgba(16,185,129,0.08);
+  animation: ripple 3s ease-in-out 0.5s infinite;
+}
+@keyframes ripple {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.5; }
+}
+.check-icon {
+  font-size: 42px;
+  animation: checkPop 0.5s cubic-bezier(0.16,1,0.3,1) 0.8s both;
+}
+@keyframes checkPop {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid rgba(16,185,129,0.3);
+  background: rgba(16,185,129,0.06);
+  padding: 8px 18px; border-radius: 100px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--green-light); margin-bottom: 28px;
+  opacity: 0; transform: translateY(15px);
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: breathe 2s ease-in-out infinite; }
+@keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 62px);
+  line-height: 1.05; letter-spacing: -1px;
+  color: var(--white); margin-bottom: 20px;
+  opacity: 0; transform: translateY(20px);
+}
+.h1-gradient {
+  background: linear-gradient(135deg, var(--green-light), var(--green), var(--green-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subtitle {
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: rgba(255,255,255,0.5); line-height: 1.8;
+  margin-bottom: 48px;
+  opacity: 0; transform: translateY(15px);
+}
+
+/* Steps */
+.steps {
+  display: flex; flex-direction: column; gap: 0;
+  margin-bottom: 52px; text-align: left;
+  opacity: 0; transform: translateY(20px);
+  border: 1px solid rgba(16,185,129,0.1);
+  border-radius: 18px; overflow: hidden;
+}
+.step {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(16,185,129,0.07);
+  transition: background 0.2s;
+}
+.step:last-child { border-bottom: none; }
+.step:hover { background: rgba(16,185,129,0.04); }
+.step-num {
+  width: 32px; height: 32px; min-width: 32px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px;
+  color: var(--green); margin-top: 2px;
+}
+.step-text h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 4px; }
+.step-text p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+/* CTA */
+.cta-wrap {
+  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  opacity: 0; transform: translateY(15px);
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--green); color: var(--navy);
+  padding: 16px 36px; border-radius: 12px;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 8px 32px rgba(16,185,129,0.35);
+  transition: all 0.15s;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(16,185,129,0.5); background: var(--green-light); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.7);
+  padding: 16px 36px; border-radius: 12px;
+  font-weight: 500; font-size: 14px; text-decoration: none;
+  transition: all 0.15s;
+}
+.btn-outline:hover { border-color: var(--green); color: var(--green-light); }
+
+/* ── FOOTER ── */
+footer {
+  background: #070F1C;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding: 32px 64px; text-align: center;
+}
+.footer-copy {
+  color: rgba(255,255,255,0.2); font-size: 12px;
+  transition: color 0.2s, text-shadow 0.2s;
+  cursor: none !important;
+}
+.footer-copy:hover {
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(16,185,129,0.4);
+}
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  main { padding: 100px 24px 60px; }
+  footer { padding: 28px 24px; }
+  .steps { margin: 0 0 40px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="3.5" fill="#10B981"/>
+        <circle cx="7" cy="7" r="2.5" fill="#6EE7B7" opacity="0.8"/>
+        <circle cx="35" cy="7" r="2.5" fill="#6EE7B7" opacity="0.8"/>
+        <circle cx="7" cy="35" r="2.5" fill="#6EE7B7" opacity="0.8"/>
+        <circle cx="35" cy="35" r="2.5" fill="#6EE7B7" opacity="0.8"/>
+        <circle cx="21" cy="3" r="2" fill="#10B981" opacity="0.6"/>
+        <circle cx="21" cy="39" r="2" fill="#10B981" opacity="0.6"/>
+        <circle cx="3" cy="21" r="2" fill="#10B981" opacity="0.6"/>
+        <circle cx="39" cy="21" r="2" fill="#10B981" opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="7" y2="7" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="35" y2="7" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="7" y2="35" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="35" y2="35" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="17.5" y1="21" x2="3" y2="21" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="24.5" y1="21" x2="39" y2="21" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="21" y2="3" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="21" y2="39" stroke="#10B981" stroke-width="0.8" stroke-opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <span class="logo-name">JVL AUTOMATION</span>
+      <span class="logo-sub">L'intelligence au cœur de votre business</span>
+    </div>
+  </a>
+  <a href="/" class="nav-back">← Retour au site</a>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <canvas id="three-canvas"></canvas>
+  <div class="content">
+
+    <div class="check-wrap" id="checkWrap">
+      <div class="check-circle">
+        <span class="check-icon">✓</span>
+      </div>
+    </div>
+
+    <div class="badge"><div class="badge-dot"></div>Réponses reçues · Merci !</div>
+
+    <h1>Vos réponses sont<br><span class="h1-gradient">bien arrivées.</span></h1>
+
+    <p class="subtitle">
+      J'ai reçu l'ensemble de vos réponses et je les analyse avec attention.<br>
+      Je vous recontacte personnellement sous 24h ouvrables.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h3>Analyse de vos réponses ✓</h3>
+          <p>Vos réponses sont reçues et seront analysées en détail avant notre échange.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h3>Prise de contact sous 24h</h3>
+          <p>Je vous envoie un email pour fixer notre appel audit à un moment qui vous convient.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h3>Votre audit personnalisé</h3>
+          <p>Un échange de 30 à 45 minutes pour vous présenter les automatisations recommandées pour votre activité.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="/" class="btn-primary">
+        Retour au site
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="mailto:jonathan@jvlautomation.com" class="btn-outline">
+        Contacter directement
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4l6 5 6-5M2 4h12v9H2V4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-copy">© 2026 JVL Automation · Automation & AI Solutions</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const dot = document.getElementById('cursor-dot');
+if (dot) {
+  let mx = 0, my = 0, dx = 0, dy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    dx += (mx - dx) * 0.18; dy += (my - dy) * 0.18;
+    dot.style.left = dx + 'px'; dot.style.top = dy + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('hovering'));
+  });
+}
+
+// ── NAV ──
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── THREE.JS ──
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+  camera.position.z = 30;
+  function resize() {
+    const W = canvas.parentElement.offsetWidth, H = canvas.parentElement.offsetHeight;
+    renderer.setSize(W, H); camera.aspect = W/H; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+
+  const geoSphere = new THREE.IcosahedronGeometry(8, 5);
+  const matSphere = new THREE.MeshStandardMaterial({ color: 0x10B981, emissive: 0x059669, emissiveIntensity: 0.4, metalness: 0.8, roughness: 0.2, transparent: true, opacity: 0.15 });
+  const sphere = new THREE.Mesh(geoSphere, matSphere); scene.add(sphere);
+  const matWire = new THREE.MeshBasicMaterial({ color: 0x10B981, wireframe: true, transparent: true, opacity: 0.07 });
+  const sphereWire = new THREE.Mesh(geoSphere.clone(), matWire); scene.add(sphereWire);
+  const origPos = new Float32Array(geoSphere.attributes.position.array);
+
+  const pCount = 1200, pGeom = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount*3), pR=new Float32Array(pCount), pT=new Float32Array(pCount), pP=new Float32Array(pCount), pS=new Float32Array(pCount);
+  for (let i=0;i<pCount;i++) {
+    pR[i]=12+Math.random()*18; pT[i]=Math.random()*Math.PI*2;
+    pP[i]=Math.acos(2*Math.random()-1); pS[i]=0.001+Math.random()*0.003;
+    pPos[i*3]=pR[i]*Math.sin(pP[i])*Math.cos(pT[i]);
+    pPos[i*3+1]=pR[i]*Math.sin(pP[i])*Math.sin(pT[i]);
+    pPos[i*3+2]=pR[i]*Math.cos(pP[i]);
+  }
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+  scene.add(new THREE.Points(pGeom, new THREE.PointsMaterial({ color: 0x6EE7B7, size: 0.15, transparent: true, opacity: 0.65, sizeAttenuation: true })));
+
+  const tGeo = new THREE.TorusGeometry(12,0.05,8,120);
+  const tMat = new THREE.MeshBasicMaterial({ color: 0x10B981, transparent: true, opacity: 0.2 });
+  const t1 = new THREE.Mesh(tGeo, tMat); t1.rotation.x=Math.PI/4; scene.add(t1);
+  const t2 = new THREE.Mesh(tGeo.clone(), tMat.clone()); t2.rotation.x=-Math.PI/3; t2.rotation.y=Math.PI/6; scene.add(t2);
+  scene.add(new THREE.AmbientLight(0x10B981, 0.5));
+  const pl = new THREE.PointLight(0x6EE7B7, 2, 50); pl.position.set(10,10,10); scene.add(pl);
+
+  const clock = new THREE.Clock();
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const spd = isMobile ? 1.0 : 0.45;
+  let mx=0, my=0, time=0;
+  document.addEventListener('mousemove', e => { mx=(e.clientX/window.innerWidth-0.5)*2; my=(e.clientY/window.innerHeight-0.5)*2; });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.05); time += delta*spd;
+    const pos = geoSphere.attributes.position;
+    for (let i=0;i<pos.count;i++) {
+      const ox=origPos[i*3],oy=origPos[i*3+1],oz=origPos[i*3+2];
+      const n=Math.sin(ox*0.5+time)*Math.cos(oy*0.5+time*0.7)*Math.sin(oz*0.5+time*1.1);
+      const s=1+n*0.18; pos.setXYZ(i,ox*s,oy*s,oz*s);
+    }
+    pos.needsUpdate=true;
+    sphereWire.geometry.attributes.position.copy(pos);
+    sphereWire.geometry.attributes.position.needsUpdate=true;
+    sphere.rotation.y=time*0.15; sphere.rotation.x=time*0.07;
+    sphereWire.rotation.y=time*0.12; sphereWire.rotation.x=-time*0.05;
+    t1.rotation.z=time*0.3; t2.rotation.z=-time*0.2;
+    const pp=pGeom.attributes.position;
+    for (let i=0;i<pCount;i++) {
+      pT[i]+=pS[i]*spd;
+      pp.setXYZ(i,pR[i]*Math.sin(pP[i])*Math.cos(pT[i]),pR[i]*Math.sin(pP[i])*Math.sin(pT[i]),pR[i]*Math.cos(pP[i]));
+    }
+    pp.needsUpdate=true;
+    if (!isMobile) { camera.position.x+=(mx*4-camera.position.x)*0.04; camera.position.y+=(-my*2-camera.position.y)*0.04; }
+    camera.lookAt(scene.position);
+    matSphere.emissiveIntensity=0.3+Math.sin(time*2)*0.15;
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+
+// ── GSAP ENTRANCE ──
+gsap.timeline({ delay: 0.1 })
+  .to('#checkWrap',   { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.5)' })
+  .to('.badge',       { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.2')
+  .to('h1',           { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4')
+  .to('.subtitle',    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.4')
+  .to('.steps',       { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.3')
+  .to('.cta-wrap',    { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3');
+
+// Magnetic cursor on buttons
+document.querySelectorAll('a').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const relX = (e.clientX - r.left - r.width/2) * 0.25;
+    const relY = (e.clientY - r.top - r.height/2) * 0.25;
+    gsap.to(el, { x: relX, y: relY, duration: 0.3, ease: 'power2.out' });
+  });
+  el.addEventListener('mouseleave', () => {
+    gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: 'elastic.out(1,0.3)' });
+  });
+});
+</script>
+</body>
+</html>
