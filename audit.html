@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Gratuit — JVL Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style>
+:root {
+  --navy: #0B1628;
+  --navy-mid: #1B2A4A;
+  --orange: #FB923C;
+  --orange-light: #FED7AA;
+  --orange-dark: #EA580C;
+  --orange-glow: rgba(251,146,60,0.15);
+  --bg: #F8FAFC;
+  --text: #1E293B;
+  --text-muted: #64748B;
+  --white: #ffffff;
+  --border: rgba(251,146,60,0.12);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+  overscroll-behavior-y: none;
+}
+@media (max-width: 900px) {
+  body { -webkit-overflow-scrolling: touch; cursor: auto; }
+}
+
+/* ── CURSOR ── */
+#cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  position: fixed; z-index: 9999;
+  pointer-events: none;
+  top: 0; left: 0;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: screen;
+}
+#cursor-dot.hovering {
+  width: 48px; height: 48px;
+  background: rgba(251,146,60,0.3);
+  border: 1px solid var(--orange);
+}
+body * { cursor: none !important; }
+@media (max-width: 900px) {
+  #cursor-dot { display: none; }
+  body * { cursor: auto !important; }
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 64px;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+nav.scrolled {
+  padding: 16px 64px;
+  background: rgba(11,22,40,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(251,146,60,0.1);
+}
+.logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.logo-mark { width: 42px; height: 42px; }
+.logo-mark svg { width: 100%; height: 100%; }
+.logo-name { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); letter-spacing: 2px; display: block; }
+.logo-sub { font-size: 9px; color: var(--orange); letter-spacing: 0.5px; font-style: italic; opacity: 0.8; display: block; }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 10px 20px; border-radius: 8px;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+.nav-back:hover { border-color: var(--orange); color: var(--orange-light); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 50vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  background: var(--navy);
+  padding: 140px 64px 80px;
+  text-align: center;
+}
+#three-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-content { position: relative; z-index: 10; max-width: 780px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(251,146,60,0.3);
+  background: rgba(251,146,60,0.06);
+  backdrop-filter: blur(10px);
+  padding: 9px 20px; border-radius: 100px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--orange-light); margin-bottom: 28px;
+  opacity: 0; transform: translateY(20px);
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); animation: breathe 2s ease-in-out infinite; }
+@keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 68px);
+  line-height: 1.05; letter-spacing: -1px;
+  color: var(--white); margin-bottom: 20px;
+  opacity: 0; transform: translateY(30px);
+}
+.h1-gradient {
+  background: linear-gradient(135deg, var(--orange-light), var(--orange), var(--orange-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: rgba(255,255,255,0.5); line-height: 1.8;
+  max-width: 560px; margin: 0 auto 20px;
+  opacity: 0; transform: translateY(20px);
+}
+.hero-note {
+  font-size: 13px; color: rgba(255,255,255,0.3);
+  opacity: 0;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrap {
+  position: sticky; top: 80px; z-index: 100;
+  background: rgba(11,22,40,0.9); backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(251,146,60,0.08);
+  padding: 16px 64px;
+}
+.progress-info {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: 860px; margin: 0 auto 10px;
+}
+.progress-label { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; }
+.progress-count { font-size: 12px; color: var(--orange); font-weight: 700; font-family: 'Montserrat', sans-serif; }
+.progress-track {
+  max-width: 860px; margin: 0 auto;
+  height: 3px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-light));
+  border-radius: 100px;
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 0 10px rgba(251,146,60,0.4);
+}
+
+/* ── FORM SECTION ── */
+#form-section {
+  padding: 60px 64px 100px;
+  max-width: 990px; margin: 0 auto;
+}
+
+/* ── QUESTION CARDS ── */
+.question-block {
+  margin-bottom: 20px;
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.question-block.visible { opacity: 1; transform: translateY(0); }
+
+.q-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px; padding: 32px 36px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  position: relative; overflow: hidden;
+}
+.q-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  opacity: 0; transition: opacity 0.15s;
+}
+.q-card:focus-within {
+  border-color: rgba(251,146,60,0.3);
+  background: rgba(251,146,60,0.03);
+  box-shadow: 0 0 0 1px rgba(251,146,60,0.08), 0 8px 32px rgba(0,0,0,0.2);
+}
+.q-card:focus-within::before { opacity: 1; }
+
+.q-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+.q-num {
+  font-family: 'Montserrat', sans-serif; font-weight: 900;
+  font-size: 11px; color: var(--orange);
+  background: rgba(251,146,60,0.1);
+  border: 1px solid rgba(251,146,60,0.2);
+  padding: 4px 10px; border-radius: 100px;
+  letter-spacing: 1px; flex-shrink: 0; margin-top: 2px;
+}
+.q-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 16px; color: var(--white); line-height: 1.4;
+}
+textarea.q-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 16px 20px;
+  font-size: 14px; color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  resize: none; outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  min-height: 90px; line-height: 1.6;
+}
+textarea.q-input::placeholder { color: rgba(255,255,255,0.2); }
+textarea.q-input:focus {
+  border-color: rgba(251,146,60,0.4);
+  background: rgba(251,146,60,0.04);
+}
+
+/* ── CATEGORY DIVIDERS ── */
+.q-category {
+  display: flex; align-items: center; gap: 16px;
+  margin: 48px 0 24px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.q-category.visible { opacity: 1; transform: translateY(0); }
+.q-category-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2.5px; color: var(--orange); white-space: nowrap;
+}
+.q-category-line { flex: 1; height: 1px; background: rgba(251,146,60,0.15); }
+
+/* ── INFO FIELDS ── */
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 20px;
+}
+.fg { display: flex; flex-direction: column; gap: 8px; }
+.fg label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+}
+.fg input, .fg select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 14px 18px;
+  font-size: 14px; color: var(--white);
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.fg input::placeholder { color: rgba(255,255,255,0.2); }
+.fg input:focus, .fg select:focus {
+  border-color: rgba(251,146,60,0.4);
+  background: rgba(251,146,60,0.04);
+}
+.fg select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23FB923C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 16px center; background-size: 16px 16px;
+  padding-right: 44px; cursor: pointer;
+}
+.fg select option { background: #0B1628; color: var(--white); }
+
+/* ── SUBMIT ── */
+.submit-wrap {
+  margin-top: 48px; text-align: center;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.submit-wrap.visible { opacity: 1; transform: translateY(0); }
+.submit-note { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 24px; line-height: 1.6; }
+.btn-submit {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--orange); color: var(--navy);
+  border: none; padding: 20px 52px; border-radius: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 15px; letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(251,146,60,0.35);
+  transition: all 0.15s;
+}
+.btn-submit:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(251,146,60,0.5); background: var(--orange-light); }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(40px); }
+.reveal.animating { transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── FOOTER ── */
+footer {
+  background: #070F1C;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding: 40px 64px; text-align: center;
+}
+.footer-copy { color: rgba(255,255,255,0.2); font-size: 12px; }
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  #hero { padding: 120px 24px 60px; }
+  #form-section { padding: 40px 24px 80px; }
+  .progress-bar-wrap { padding: 14px 24px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .q-card { padding: 24px 20px; }
+  footer { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="/" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="3.5" fill="#FB923C"/>
+        <circle cx="7" cy="7" r="2.5" fill="#FED7AA" opacity="0.8"/>
+        <circle cx="35" cy="7" r="2.5" fill="#FED7AA" opacity="0.8"/>
+        <circle cx="7" cy="35" r="2.5" fill="#FED7AA" opacity="0.8"/>
+        <circle cx="35" cy="35" r="2.5" fill="#FED7AA" opacity="0.8"/>
+        <circle cx="21" cy="3" r="2" fill="#FB923C" opacity="0.6"/>
+        <circle cx="21" cy="39" r="2" fill="#FB923C" opacity="0.6"/>
+        <circle cx="3" cy="21" r="2" fill="#FB923C" opacity="0.6"/>
+        <circle cx="39" cy="21" r="2" fill="#FB923C" opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="7" y2="7" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="35" y2="7" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="7" y2="35" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="35" y2="35" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="17.5" y1="21" x2="3" y2="21" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="24.5" y1="21" x2="39" y2="21" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="17.5" x2="21" y2="3" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+        <line x1="21" y1="24.5" x2="21" y2="39" stroke="#FB923C" stroke-width="0.8" stroke-opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <span class="logo-name">JVL AUTOMATION</span>
+      <span class="logo-sub">L'intelligence au cœur de votre business</span>
+    </div>
+  </a>
+  <a href="/" class="nav-back">
+    ← Retour au site
+  </a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="badge-dot"></div>Audit gratuit · Confidentiel · Sans engagement</div>
+    <h1>Préparez votre<br><span class="h1-gradient">audit automation</span></h1>
+    <p class="hero-sub">Ces 20 questions me permettent de comprendre votre activité en profondeur et de préparer des recommandations concrètes avant notre échange.</p>
+    <p class="hero-note">⏱ Environ 10–15 minutes · Vos réponses restent confidentielles</p>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap" id="progressWrap">
+  <div class="progress-info">
+    <span class="progress-label">Votre progression</span>
+    <span class="progress-count" id="progressCount">0 / 20 questions</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<!-- FORM -->
+<div id="form-section">
+  <form id="auditForm">
+
+    <!-- Info de base -->
+    <div class="q-category reveal"><div class="q-category-line"></div><span class="q-category-label">Vos coordonnées</span><div class="q-category-line"></div></div>
+    <div class="q-card reveal" style="margin-bottom:20px">
+      <div class="info-grid">
+        <div class="fg"><label>Prénom *</label><input type="text" name="prenom" placeholder="Jean" required></div>
+        <div class="fg"><label>Nom *</label><input type="text" name="nom" placeholder="Dupont" required></div>
+        <div class="fg"><label>Email *</label><input type="email" name="email" placeholder="jean@entreprise.com" required></div>
+        <div class="fg"><label>Secteur</label>
+          <select name="secteur">
+            <option value="">Votre secteur</option>
+            <option>Immobilier</option>
+            <option>Comptabilité / Finance</option>
+            <option>Marketing / Communication</option>
+            <option>Restaurant / Retail</option>
+            <option>Santé / Thérapeute</option>
+            <option>E-commerce</option>
+            <option>Agence / Consultant</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Catégorie 1 -->
+    <div class="q-category reveal"><div class="q-category-line"></div><span class="q-category-label">Temps & frustrations</span><div class="q-category-line"></div></div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">01</span><span class="q-text">Quelle tâche vous fait perdre le plus de temps chaque semaine ?</span></div>
+        <textarea class="q-input" name="q1" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">02</span><span class="q-text">Quelle tâche répétitive aimeriez-vous ne plus jamais faire manuellement ?</span></div>
+        <textarea class="q-input" name="q2" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">03</span><span class="q-text">Quelles actions faites-vous tous les jours ou plusieurs fois par semaine ?</span></div>
+        <textarea class="q-input" name="q3" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">04</span><span class="q-text">Quel processus dans votre entreprise vous frustre le plus ?</span></div>
+        <textarea class="q-input" name="q4" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">05</span><span class="q-text">Combien de temps passez-vous sur l'administratif chaque semaine ?</span></div>
+        <textarea class="q-input" name="q5" placeholder="Ex : environ 8h, principalement sur la facturation et les emails..."></textarea>
+      </div>
+    </div>
+
+    <!-- Catégorie 2 -->
+    <div class="q-category reveal"><div class="q-category-line"></div><span class="q-category-label">Prospects & clients</span><div class="q-category-line"></div></div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">06</span><span class="q-text">Où perdez-vous actuellement des prospects ou des clients ?</span></div>
+        <textarea class="q-input" name="q6" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">07</span><span class="q-text">Comment recevez-vous vos demandes clients ou prospects ?</span></div>
+        <textarea class="q-input" name="q7" placeholder="Ex : email, formulaire, téléphone, réseaux sociaux..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">08</span><span class="q-text">Que se passe-t-il après qu'un prospect vous contacte ?</span></div>
+        <textarea class="q-input" name="q8" placeholder="Décrivez votre processus actuel..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">09</span><span class="q-text">Faites-vous des relances automatiques ou manuelles ?</span></div>
+        <textarea class="q-input" name="q9" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">10</span><span class="q-text">Avez-vous déjà oublié de répondre à un prospect ou client ?</span></div>
+        <textarea class="q-input" name="q10" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <!-- Catégorie 3 -->
+    <div class="q-category reveal"><div class="q-category-line"></div><span class="q-category-label">Outils & données</span><div class="q-category-line"></div></div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">11</span><span class="q-text">Quels outils utilisez-vous actuellement pour gérer votre activité ?</span></div>
+        <textarea class="q-input" name="q11" placeholder="Ex : Gmail, Excel, Notion, CRM, Trello..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">12</span><span class="q-text">Y a-t-il des informations que vous devez encoder plusieurs fois dans différents outils ?</span></div>
+        <textarea class="q-input" name="q12" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">13</span><span class="q-text">Quelles erreurs humaines arrivent le plus souvent dans votre activité ?</span></div>
+        <textarea class="q-input" name="q13" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">14</span><span class="q-text">Quelles données ou informations aimeriez-vous centraliser automatiquement ?</span></div>
+        <textarea class="q-input" name="q14" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">15</span><span class="q-text">Quels indicateurs ou statistiques aimeriez-vous voir automatiquement dans un dashboard ?</span></div>
+        <textarea class="q-input" name="q15" placeholder="Ex : CA du mois, nombre de leads, taux de conversion..."></textarea>
+      </div>
+    </div>
+
+    <!-- Catégorie 4 -->
+    <div class="q-category reveal"><div class="q-category-line"></div><span class="q-category-label">Vision & objectifs</span><div class="q-category-line"></div></div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">16</span><span class="q-text">Quelles tâches ralentissent votre croissance aujourd'hui ?</span></div>
+        <textarea class="q-input" name="q16" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">17</span><span class="q-text">Si vous pouviez automatiser une seule chose demain matin, ce serait quoi ?</span></div>
+        <textarea class="q-input" name="q17" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">18</span><span class="q-text">Quel serait l'impact concret si vous gagniez 5 à 10 heures par semaine ?</span></div>
+        <textarea class="q-input" name="q18" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">19</span><span class="q-text">Quel objectif principal souhaitez-vous atteindre dans les 6 prochains mois ?</span></div>
+        <textarea class="q-input" name="q19" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-card">
+        <div class="q-header"><span class="q-num">20</span><span class="q-text">Qu'attendez-vous idéalement d'un système d'automatisation ou d'IA dans votre entreprise ?</span></div>
+        <textarea class="q-input" name="q20" placeholder="Décrivez en quelques lignes..."></textarea>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap reveal">
+      <p class="submit-note">Vos réponses sont confidentielles et utilisées uniquement pour préparer votre audit.<br>Je vous recontacte sous 24h ouvrables pour fixer notre échange.</p>
+      <button class="btn-submit" id="submitBtn" type="submit">
+        Envoyer mes réponses
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<footer>
+  <div class="footer-copy">© 2025 JVL Automation · Jonathan Van Looy · Jodoigne, Belgique · <a href="/" style="color:rgba(255,255,255,0.3);text-decoration:none">jvlautomation.com</a></div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const dot = document.getElementById('cursor-dot');
+if (dot) {
+  let mx = 0, my = 0, dx = 0, dy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    dx += (mx - dx) * 0.18; dy += (my - dy) * 0.18;
+    dot.style.left = dx + 'px'; dot.style.top = dy + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button, textarea, input, select').forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('hovering'));
+  });
+}
+
+// ── NAV ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── THREE.JS HERO ──
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+  camera.position.z = 30;
+  function resize() {
+    const W = canvas.parentElement.offsetWidth;
+    const H = canvas.parentElement.offsetHeight;
+    renderer.setSize(W, H);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+
+  const geoSphere = new THREE.IcosahedronGeometry(8, 5);
+  const matSphere = new THREE.MeshStandardMaterial({ color: 0xFB923C, emissive: 0xEA580C, emissiveIntensity: 0.4, metalness: 0.8, roughness: 0.2, transparent: true, opacity: 0.15 });
+  const sphere = new THREE.Mesh(geoSphere, matSphere);
+  scene.add(sphere);
+  const matWire = new THREE.MeshBasicMaterial({ color: 0xFB923C, wireframe: true, transparent: true, opacity: 0.07 });
+  const sphereWire = new THREE.Mesh(geoSphere.clone(), matWire);
+  scene.add(sphereWire);
+  const origPos = new Float32Array(geoSphere.attributes.position.array);
+
+  const pCount = 1200;
+  const pGeom = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount * 3);
+  const pR = new Float32Array(pCount), pT = new Float32Array(pCount), pP = new Float32Array(pCount), pS = new Float32Array(pCount);
+  for (let i = 0; i < pCount; i++) {
+    pR[i] = 12 + Math.random() * 18; pT[i] = Math.random() * Math.PI * 2;
+    pP[i] = Math.acos(2 * Math.random() - 1); pS[i] = 0.001 + Math.random() * 0.003;
+    pPos[i*3] = pR[i]*Math.sin(pP[i])*Math.cos(pT[i]);
+    pPos[i*3+1] = pR[i]*Math.sin(pP[i])*Math.sin(pT[i]);
+    pPos[i*3+2] = pR[i]*Math.cos(pP[i]);
+  }
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xFED7AA, size: 0.15, transparent: true, opacity: 0.65, sizeAttenuation: true });
+  scene.add(new THREE.Points(pGeom, pMat));
+
+  const torusGeo = new THREE.TorusGeometry(12, 0.05, 8, 120);
+  const torusMat = new THREE.MeshBasicMaterial({ color: 0xFB923C, transparent: true, opacity: 0.2 });
+  const t1 = new THREE.Mesh(torusGeo, torusMat); t1.rotation.x = Math.PI / 4; scene.add(t1);
+  const t2 = new THREE.Mesh(torusGeo.clone(), torusMat.clone()); t2.rotation.x = -Math.PI/3; t2.rotation.y = Math.PI/6; scene.add(t2);
+  scene.add(new THREE.AmbientLight(0xFB923C, 0.5));
+  const pl = new THREE.PointLight(0xFED7AA, 2, 50); pl.position.set(10,10,10); scene.add(pl);
+
+  const clock = new THREE.Clock();
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const spd = isMobile ? 1.0 : 0.45;
+  let mx = 0, my = 0, time = 0;
+  document.addEventListener('mousemove', e => { mx = (e.clientX/window.innerWidth-0.5)*2; my = (e.clientY/window.innerHeight-0.5)*2; });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.05);
+    time += delta * spd;
+    const pos = geoSphere.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const ox=origPos[i*3],oy=origPos[i*3+1],oz=origPos[i*3+2];
+      const n = Math.sin(ox*0.5+time)*Math.cos(oy*0.5+time*0.7)*Math.sin(oz*0.5+time*1.1);
+      const s = 1+n*0.18;
+      pos.setXYZ(i,ox*s,oy*s,oz*s);
+    }
+    pos.needsUpdate = true;
+    sphereWire.geometry.attributes.position.copy(pos);
+    sphereWire.geometry.attributes.position.needsUpdate = true;
+    sphere.rotation.y=time*0.15; sphere.rotation.x=time*0.07;
+    sphereWire.rotation.y=time*0.12; sphereWire.rotation.x=-time*0.05;
+    t1.rotation.z=time*0.3; t2.rotation.z=-time*0.2;
+    const pp = pGeom.attributes.position;
+    for (let i=0;i<pCount;i++) {
+      pT[i]+=pS[i]*spd;
+      pp.setXYZ(i,pR[i]*Math.sin(pP[i])*Math.cos(pT[i]),pR[i]*Math.sin(pP[i])*Math.sin(pT[i]),pR[i]*Math.cos(pP[i]));
+    }
+    pp.needsUpdate = true;
+    if (!isMobile) { camera.position.x+=(mx*4-camera.position.x)*0.04; camera.position.y+=(-my*2-camera.position.y)*0.04; }
+    camera.lookAt(scene.position);
+    matSphere.emissiveIntensity = 0.3+Math.sin(time*2)*0.15;
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ── HERO ENTRANCE ──
+gsap.timeline({ delay: 0.2 })
+  .to('.hero-badge', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' })
+  .to('h1', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
+  .to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+  .to('.hero-note', { opacity: 1, duration: 0.6 }, '-=0.3');
+
+// ── SCROLL REVEAL ──
+const allReveals = document.querySelectorAll('.reveal, .question-block, .q-category');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      el.classList.add('animating');
+      requestAnimationFrame(() => el.classList.add('visible'));
+      setTimeout(() => { el.style.transitionDelay = '0s'; el.classList.remove('animating'); }, 900);
+      revObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.08 });
+allReveals.forEach(el => revObs.observe(el));
+
+// ── PROGRESS BAR ──
+const inputs = document.querySelectorAll('textarea.q-input');
+const total = inputs.length;
+function updateProgress() {
+  const filled = [...inputs].filter(i => i.value.trim().length > 2).length;
+  const pct = (filled / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = filled + ' / ' + total + ' questions';
+}
+inputs.forEach(i => i.addEventListener('input', updateProgress));
+
+// ── AUTO-RESIZE TEXTAREAS ──
+inputs.forEach(ta => {
+  ta.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.max(90, this.scrollHeight) + 'px';
+  });
+});
+
+// ── FORMSPREE SUBMIT ──
+document.getElementById('auditForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = 'Envoi en cours...'; btn.disabled = true; btn.style.opacity = '0.8';
+  try {
+    const res = await fetch('https://formspree.io/f/xojbwanw', {
+      method: 'POST', body: new FormData(this), headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      btn.innerHTML = '✓ Réponses envoyées !'; btn.style.background = '#10B981'; btn.style.opacity = '1';
+      this.reset(); updateProgress();
+      setTimeout(() => { btn.innerHTML = origHTML; btn.style.background = ''; btn.disabled = false; }, 5000);
+    } else { throw new Error(); }
+  } catch {
+    btn.innerHTML = '✗ Erreur — réessayez'; btn.style.background = '#EF4444'; btn.style.opacity = '1';
+    setTimeout(() => { btn.innerHTML = origHTML; btn.style.background = ''; btn.disabled = false; }, 3500);
+  }
+});
+</script>
+</body>
+</html>
