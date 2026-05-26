@@ -275,9 +275,22 @@ h2 {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 100px; align-items: center;
 }
+.value-points { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.vp {
+  display: flex; gap: 14px; align-items: center;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  transition: all 0.4s;
+  background: rgba(255,255,255,0.02);
+  height: auto !important;
+  box-sizing: border-box;
+  flex-direction: row;
+  text-align: left;
+}
 /* morphing blob */
 .morph-container {
-  position: relative; height: 500px;
+  position: relative; height: 560px;
   display: flex; align-items: center; justify-content: center;
 }
 #morph-canvas { width: 100%; height: 100%; }
@@ -285,16 +298,16 @@ h2 {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 0; padding: 40px;
+  gap: 0; padding: 24px 32px;
 }
 .flow-node {
   background: rgba(11,22,40,0.85);
   border: 1px solid rgba(14,165,233,0.25);
   backdrop-filter: blur(16px);
-  border-radius: 14px;
-  padding: 14px 28px;
+  border-radius: 16px;
+  padding: 18px 32px;
   text-align: center;
-  width: 82%;
+  width: 90%;
   transition: all 0.4s;
   position: relative;
 }
@@ -304,37 +317,77 @@ h2 {
   transform: translateX(6px);
   box-shadow: -4px 0 20px rgba(14,165,233,0.2);
 }
-.flow-node-emoji { font-size: 18px; margin-bottom: 2px; }
-.flow-node-tag { font-size: 9px; color: var(--electric); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
-.flow-node-label { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; }
-.flow-connector {
-  width: 1px; height: 28px;
-  background: linear-gradient(to bottom, rgba(14,165,233,0.6), rgba(14,165,233,0.2));
-  position: relative;
+.flow-node-emoji { font-size: 22px; margin-bottom: 4px; }
+.flow-node-tag { font-size: 10px; color: var(--electric); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
+.flow-node.optional {
+  opacity: 0.93;
+  border: 1px dashed rgba(14,165,233,0.3);
+  background: rgba(14,165,233,0.06);
 }
+.flow-node.optional:hover { opacity: 1; }
+.flow-node.optional .flow-node-tag { color: rgba(14,165,233,0.75); }
+.flow-node-label { font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+/* Base connector */
+.flow-connector {
+  width: 2px; height: 40px;
+  background: linear-gradient(to bottom, rgba(14,165,233,0.5), rgba(14,165,233,0.15));
+  position: relative;
+  margin: 0 auto;
+}
+/* Animated dot — sequential via delay on a long total cycle */
 .flow-connector::after {
   content: '';
-  position: absolute; bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 6px; height: 6px;
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 7px; height: 7px;
   background: var(--electric);
   border-radius: 50%;
-  animation: flowDot 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(14,165,233,0.8), 0 0 16px rgba(14,165,233,0.4);
+  animation: flowDot 4s ease-in-out infinite;
 }
+/* Each connector fires 0.9s after the previous — total cycle 2.7s */
+.flow-connector:nth-of-type(2)::after { animation-delay: 0s; }
+.flow-connector:nth-of-type(4)::after { animation-delay: 1.33s; }
+.flow-connector:nth-of-type(6)::after { animation-delay: 2.66s; }
+
+/* No dashed — all connectors look the same */
+.flow-connector.dashed {
+  width: 2px; height: 40px;
+  background: linear-gradient(to bottom, rgba(14,165,233,0.5), rgba(14,165,233,0.15));
+  border: none;
+  margin: 0 auto;
+  position: relative;
+}
+.flow-connector.dashed::after {
+  content: '';
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 7px; height: 7px;
+  background: var(--electric);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(14,165,233,0.8), 0 0 16px rgba(14,165,233,0.4);
+  animation: flowDot 4s ease-in-out infinite;
+  display: block;
+}
+.flow-connector.dashed:nth-of-type(4)::after { animation-delay: 1.33s; }
+.flow-connector.dashed:nth-of-type(6)::after { animation-delay: 2.66s; }
+
 @keyframes flowDot {
-  0% { top: 0; opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
+  0%   { top: -4px; opacity: 0; }
+  5%   { opacity: 1; }
+  28%  { opacity: 1; }
+  33%  { top: 100%; opacity: 0; }
   100% { top: 100%; opacity: 0; }
 }
 
 .value-text { color: rgba(255,255,255,0.9); }
 .value-text h2 { color: var(--white); margin-bottom: 24px; }
 .value-text p { font-size: 17px; color: rgba(255,255,255,0.5); line-height: 1.8; margin-bottom: 48px; }
-.value-points { display: flex; flex-direction: column; gap: 24px; }
+.value-points { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
 .vp {
-  display: flex; gap: 18px; align-items: flex-start;
-  padding: 20px;
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px 16px;
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 14px;
   transition: all 0.4s;
@@ -346,15 +399,15 @@ h2 {
   transform: translateX(8px);
 }
 .vp-icon {
-  width: 44px; height: 44px; min-width: 44px;
+  width: 36px; height: 36px; min-width: 36px;
   background: rgba(14,165,233,0.1);
   border: 1px solid rgba(14,165,233,0.2);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
 }
-.vp-text h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.vp-text p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+.vp-text h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.vp-text p { font-size: 12.5px; color: rgba(255,255,255,0.45); line-height: 1.5; }
 
 /* ── PROCESS ── */
 #process {
@@ -483,6 +536,7 @@ h2 {
 }
 .scard:hover .scard-title { color: var(--electric-light); }
 .scard-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+.scard-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 28px; }
 .scard-feats li {
   font-size: 13px; color: rgba(255,255,255,0.45);
   display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;
@@ -879,41 +933,45 @@ footer {
       <div class="morph-container reveal from-left">
         <canvas id="morph-canvas"></canvas>
         <div class="flow-overlay">
-          <div class="flow-node">
-            <div class="flow-node-emoji">📊</div>
-            <div class="flow-node-tag">Source</div>
-            <div class="flow-node-label">Vos données existantes</div>
+          <!-- NODE 1 : SOURCE -->
+          <div class="flow-node" id="flow-source">
+            <div class="flow-node-emoji">📥</div>
+            <div class="flow-node-tag">Données entrantes</div>
+            <div class="flow-node-label" id="flow-source-label">Formulaire web</div>
           </div>
           <div class="flow-connector"></div>
-          <div class="flow-node">
+          <!-- NODE 2 : AUTOMATISATION -->
+          <div class="flow-node" id="flow-auto">
             <div class="flow-node-emoji">⚙️</div>
-            <div class="flow-node-tag">Make.com</div>
-            <div class="flow-node-label">Automatisation & traitement</div>
+            <div class="flow-node-tag">Automatisation</div>
+            <div class="flow-node-label" id="flow-auto-label">Tri & déclenchement</div>
           </div>
-          <div class="flow-connector"></div>
-          <div class="flow-node">
+          <div class="flow-connector dashed"></div>
+          <!-- NODE 3 : IA -->
+          <div class="flow-node optional" id="flow-ia">
             <div class="flow-node-emoji">🤖</div>
-            <div class="flow-node-tag">OpenAI GPT-4o</div>
-            <div class="flow-node-label">Intelligence artificielle</div>
+            <div class="flow-node-tag">IA si nécessaire</div>
+            <div class="flow-node-label" id="flow-ia-label">Qualification des leads</div>
           </div>
-          <div class="flow-connector"></div>
-          <div class="flow-node">
-            <div class="flow-node-emoji">📈</div>
-            <div class="flow-node-tag">Output</div>
-            <div class="flow-node-label">Dashboard · Email · PDF · Alerte</div>
+          <div class="flow-connector dashed"></div>
+          <!-- NODE 4 : OUTPUT -->
+          <div class="flow-node" id="flow-output">
+            <div class="flow-node-emoji">📤</div>
+            <div class="flow-node-tag">Action automatique</div>
+            <div class="flow-node-label" id="flow-output-label">Email envoyé automatiquement</div>
           </div>
         </div>
       </div>
       <div class="value-text reveal from-right">
         <span class="label">Notre approche</span>
         <h2>Votre business mérite de tourner <span class="text-gradient">tout seul</span></h2>
-        <p>Je connecte vos outils existants et y ajoute une couche d'IA pour éliminer les tâches répétitives — sans changer votre façon de travailler.</p>
+        <p>Je connecte vos outils existants et automatise vos processus pour éliminer les tâches répétitives — sans changer votre façon de travailler.</p>
         <div class="value-points">
           <div class="vp">
             <div class="vp-icon">⚡</div>
             <div class="vp-text">
-              <h3>Résultats en quelques jours</h3>
-              <p>Pas de projet à 6 mois. Des systèmes opérationnels livrés rapidement, avec des résultats mesurables dès le premier lundi.</p>
+              <h3>Opérationnel en 7 jours</h3>
+              <p>Des systèmes opérationnels livrés rapidement, avec des résultats mesurables dès la première semaine.</p>
             </div>
           </div>
           <div class="vp">
@@ -927,7 +985,14 @@ footer {
             <div class="vp-icon">🔄</div>
             <div class="vp-text">
               <h3>Systèmes qui évoluent</h3>
-              <p>Votre business change, vos automatisations aussi. Support mensuel inclus pour les ajustements.</p>
+              <p>Votre business change, vos automatisations aussi. Un support mensuel est disponible pour assurer la maintenance, résoudre les imprévus et faire évoluer vos systèmes au fil du temps.</p>
+            </div>
+          </div>
+          <div class="vp">
+            <div class="vp-icon">✅</div>
+            <div class="vp-text">
+              <h3>Satisfait ou refait</h3>
+              <p>Garantie de résultat sans condition. Si ce n'est pas ce qu'on a défini ensemble, je modifie.</p>
             </div>
           </div>
         </div>
@@ -956,8 +1021,8 @@ footer {
       </div>
       <div class="pstep reveal" style="transition-delay:0.3s">
         <div class="pstep-num">03</div>
-        <div class="pstep-title">Ça tourne seul</div>
-        <p class="pstep-desc">Votre système fonctionne 24h/24. Je reste disponible pour la maintenance et les évolutions.</p>
+        <div class="pstep-title">Livraison</div>
+        <p class="pstep-desc">Votre système est livré et tourne 24h/24. Je reste joignable si besoin, et disponible pour faire évoluer vos automatisations au fil du temps.</p>
       </div>
     </div>
   </div>
@@ -1067,14 +1132,14 @@ footer {
       <p>Je construis avec les meilleurs outils du marché pour garantir fiabilité et scalabilité.</p>
     </div>
     <div class="stack-pills">
-      <div class="spill reveal" style="transition-delay:0.05s"><div class="spill-dot"></div>Make.com</div>
-      <div class="spill reveal" style="transition-delay:0.1s"><div class="spill-dot"></div>Google Looker Studio</div>
-      <div class="spill reveal" style="transition-delay:0.15s"><div class="spill-dot"></div>OpenAI GPT-4o-mini</div>
-      <div class="spill reveal" style="transition-delay:0.2s"><div class="spill-dot"></div>Google Workspace</div>
-      <div class="spill reveal" style="transition-delay:0.25s"><div class="spill-dot"></div>Tally.so</div>
-      <div class="spill reveal" style="transition-delay:0.3s"><div class="spill-dot"></div>Calendly</div>
-      <div class="spill reveal" style="transition-delay:0.35s"><div class="spill-dot"></div>Typebot</div>
-      <div class="spill reveal" style="transition-delay:0.4s"><div class="spill-dot"></div>Python / Full Stack</div>
+      <div class="spill reveal" style="transition-delay:0.05s"><div class="spill-dot"></div>Make</div>
+      <div class="spill reveal" style="transition-delay:0.1s"><div class="spill-dot"></div>n8n</div>
+      <div class="spill reveal" style="transition-delay:0.15s"><div class="spill-dot"></div>Zapier</div>
+      <div class="spill reveal" style="transition-delay:0.2s"><div class="spill-dot"></div>OpenAI GPT</div>
+      <div class="spill reveal" style="transition-delay:0.25s"><div class="spill-dot"></div>Claude</div>
+      <div class="spill reveal" style="transition-delay:0.3s"><div class="spill-dot"></div>Google Workspace</div>
+      <div class="spill reveal" style="transition-delay:0.35s"><div class="spill-dot"></div>Google Data Studio</div>
+      <div class="spill reveal" style="transition-delay:0.4s"><div class="spill-dot"></div>Développement custom — Python · JavaScript · SQL</div>
     </div>
   </div>
 </section>
@@ -1085,7 +1150,7 @@ footer {
     <div class="pricing-header reveal">
       <span class="label">Tarifs</span>
       <h2 style="color:var(--white)">Transparent et <span class="text-gradient">sans surprise</span></h2>
-      <p>Pas de TVA sous 25 000€/an — 100% déductible professionnel.</p>
+
     </div>
     <div class="pricing-cards">
       <div class="pcard reveal" style="transition-delay:0.1s">
@@ -1546,6 +1611,76 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.08 });
 reveals.forEach(el => revealObserver.observe(el));
+
+// ── FLOW DIAGRAM — rotation dynamique des exemples ──
+(function() {
+  const sources = [
+    { emoji: '📥', label: 'Formulaire web' },
+    { emoji: '📧', label: 'Email entrant' },
+    { emoji: '🛒', label: 'Commande Shopify' },
+    { emoji: '📅', label: 'Réservation Calendly' },
+    { emoji: '📋', label: 'Google Sheets' },
+    { emoji: '💼', label: 'CRM (HubSpot, Notion)' },
+    { emoji: '💬', label: 'Message WhatsApp' },
+  ];
+  const autos = [
+    { emoji: '⚙️', label: 'Tri & déclenchement' },
+    { emoji: '🔗', label: 'Connexion entre outils' },
+    { emoji: '🔀', label: 'Déclenchement conditionnel' },
+    { emoji: '🗄️', label: 'Mise à jour de données' },
+    { emoji: '📊', label: 'Extraction & transformation' },
+  ];
+  const ias = [
+    { emoji: '🤖', label: 'Qualification des leads' },
+    { emoji: '🧠', label: 'Analyse de sentiment' },
+    { emoji: '✍️', label: 'Rédaction d\'emails' },
+    { emoji: '📝', label: 'Génération de résumés' },
+    { emoji: '🎯', label: 'Scoring de prospects' },
+    { emoji: '🌐', label: 'Traduction automatique' },
+  ];
+  const outputs = [
+    { emoji: '📤', label: 'Email envoyé automatiquement' },
+    { emoji: '📄', label: 'Devis PDF généré' },
+    { emoji: '📊', label: 'Dashboard mis à jour' },
+    { emoji: '🔔', label: 'Alerte Slack / WhatsApp' },
+    { emoji: '✅', label: 'Tâche créée dans Notion' },
+    { emoji: '💳', label: 'Facturation automatique' },
+    { emoji: '📈', label: 'Rapport hebdomadaire' },
+  ];
+
+  // Each node has its own independent index and interval
+  const nodes = [
+    { id: 'flow-source',  labelId: 'flow-source-label',  data: sources,  interval: 3200, idx: 0 },
+    { id: 'flow-auto',    labelId: 'flow-auto-label',    data: autos,    interval: 4100, idx: 1 },
+    { id: 'flow-ia',      labelId: 'flow-ia-label',      data: ias,      interval: 3700, idx: 2 },
+    { id: 'flow-output',  labelId: 'flow-output-label',  data: outputs,  interval: 4600, idx: 0 },
+  ];
+
+  function updateNode(node) {
+    const el = document.getElementById(node.id);
+    const label = document.getElementById(node.labelId);
+    if (!el || !label) return;
+    const item = node.data[node.idx % node.data.length];
+    el.querySelector('.flow-node-emoji').textContent = item.emoji;
+    label.style.opacity = '0';
+    label.style.transform = 'translateY(5px)';
+    setTimeout(() => {
+      label.textContent = item.label;
+      label.style.transition = 'opacity 0.35s, transform 0.35s';
+      label.style.opacity = '1';
+      label.style.transform = 'translateY(0)';
+    }, 200);
+    node.idx++;
+  }
+
+  // Start each node independently with a slight initial delay
+  nodes.forEach((node, i) => {
+    setTimeout(() => {
+      updateNode(node);
+      setInterval(() => updateNode(node), node.interval);
+    }, i * 600 + 1500);
+  });
+})();
 
 // ── SCARD SPOTLIGHT (mouse-tracking glow) ──
 document.querySelectorAll('.scard').forEach(card => {
