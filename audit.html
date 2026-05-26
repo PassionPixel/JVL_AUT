@@ -752,7 +752,7 @@ document.getElementById('auditForm').addEventListener('submit', async function(e
       method: 'POST', body: new FormData(this), headers: { 'Accept': 'application/json' }
     });
     if (res.ok) {
-      btn.innerHTML = '✓ Redirection...'; btn.style.background = '#10B981'; btn.style.opacity = '1';
+      btn.innerHTML = '✓ Réponses envoyées !'; btn.style.background = '#10B981'; btn.style.opacity = '1';
       setTimeout(() => { window.location.href = '/merci'; }, 800);
     } else { throw new Error(); }
   } catch {
