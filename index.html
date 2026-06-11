@@ -3269,49 +3269,41 @@ if (isMobile) {
 
       // ── MASK CANVAS ──
       const maskCanvas = document.getElementById('bh-mask-canvas');
-      const maskFixed = document.getElementById('bh-mask-fixed');
+      const maskFixed  = document.getElementById('bh-mask-fixed');
 
-      // Sur mobile : on ne calcule que bh-mask-canvas (position:absolute dans hero)
-      // bh-mask-fixed (position:fixed) bouge avec la barre Safari → toujours désactivé sur mobile
       if (isMobile) {
-        // Masque uniquement dans le canvas hero — coordonnées relatives, jamais de recalcul
-        if (!bh._vpFrozen) {
-          bh._vpX = bh.x;
-          bh._vpY = bh.y;
-          bh._vpFrozen = true;
-        }
-        if (maskFixed) maskFixed.style.display = 'none';
+        // Sur mobile : aucun masque du tout
+        // Les deux bougent avec le scroll iOS Safari → désactivés
+        if (maskCanvas) maskCanvas.style.display = 'none';
+        if (maskFixed)  maskFixed.style.display  = 'none';
       } else {
-        // Desktop : recalcul normal à chaque frame
         const heroRect3 = document.getElementById('hero').getBoundingClientRect();
-        bh._vpX = heroRect3.left + bh.x;
-        bh._vpY = heroRect3.top + bh.y;
-      }
-      const bhVpX = bh._vpX;
-      const bhVpY = bh._vpY;
+        const bhVpX = heroRect3.left + bh.x;
+        const bhVpY = heroRect3.top  + bh.y;
 
-      function drawMask(mc2, cx2, cy2) {
-        const dpr2 = window.devicePixelRatio || 1;
-        const mW2 = mc2.offsetWidth, mH2 = mc2.offsetHeight;
-        if (mc2.width !== mW2 * dpr2) { mc2.width = mW2 * dpr2; mc2.height = mH2 * dpr2; }
-        const c2 = mc2.getContext('2d');
-        c2.clearRect(0, 0, mc2.width, mc2.height);
-        c2.save();
-        c2.scale(dpr2, dpr2);
-        c2.beginPath();
-        c2.arc(cx2, cy2, bh.r * 0.95, 0, Math.PI * 2);
-        c2.fillStyle = '#000000';
-        c2.fill();
-        c2.restore();
-      }
+        function drawMask(mc2, cx2, cy2) {
+          const dpr2 = window.devicePixelRatio || 1;
+          const mW2 = mc2.offsetWidth, mH2 = mc2.offsetHeight;
+          if (mc2.width !== mW2 * dpr2) { mc2.width = mW2 * dpr2; mc2.height = mH2 * dpr2; }
+          const c2 = mc2.getContext('2d');
+          c2.clearRect(0, 0, mc2.width, mc2.height);
+          c2.save();
+          c2.scale(dpr2, dpr2);
+          c2.beginPath();
+          c2.arc(cx2, cy2, bh.r * 0.95, 0, Math.PI * 2);
+          c2.fillStyle = '#000000';
+          c2.fill();
+          c2.restore();
+        }
 
-      if (maskCanvas && bh._textAbsorbing) {
-        maskCanvas.style.display = 'block';
-        drawMask(maskCanvas, bh.x, bh.y);
-      }
-      if (maskFixed && bh._textAbsorbing && !isMobile) {
-        maskFixed.style.display = 'block';
-        drawMask(maskFixed, bhVpX, bhVpY);
+        if (maskCanvas && bh._textAbsorbing) {
+          maskCanvas.style.display = 'block';
+          drawMask(maskCanvas, bh.x, bh.y);
+        }
+        if (maskFixed && bh._textAbsorbing) {
+          maskFixed.style.display = 'block';
+          drawMask(maskFixed, bhVpX, bhVpY);
+        }
       }
     }
 
