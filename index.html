@@ -36,10 +36,6 @@ body {
   cursor: none;
   overscroll-behavior-y: none;
 }
-@media (max-width: 900px) {
-  body { -webkit-overflow-scrolling: touch; }
-}
-
 /* ── MAGNETIC CURSOR ── */
 #cursor-dot {
   width: 8px; height: 8px;
@@ -969,6 +965,7 @@ footer {
 
 /* ── MOBILE ── */
 @media (max-width: 900px) {
+  body { -webkit-overflow-scrolling: touch; }
   nav { padding: 16px 24px; }
   nav ul { display: none; }
   .section-inner { padding: 80px 24px; }
@@ -982,17 +979,19 @@ footer {
   footer { padding: 40px 24px; }
   .footer-inner { flex-direction: column; text-align: center; }
   .hero-stats { display: none; }
-  #hero {
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-  }
+  #hero { align-items: center; flex-direction: column; justify-content: center; }
   .hero-content { width: 100%; }
   .services-top { flex-direction: column; gap: 20px; }
   .form-row { grid-template-columns: 1fr; }
   body { cursor: auto; }
   #cursor-dot { display: none; }
   body * { cursor: auto !important; }
+  /* Burger & drawer */
+  #idx-burger { display: flex; }
+  #idx-mobile-menu { display: flex; }
+  /* À propos */
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-distinction { position: static; }
 }
 
 /* ── BURGER FIXE INDEX ── */
@@ -1027,9 +1026,6 @@ footer {
 }
 #idx-burger.open .arc1 { transform: rotate(135deg); stroke: #38BDF8; }
 #idx-burger.open .arc2 { transform: rotate(-45deg); stroke: #38BDF8; opacity: 1; }
-@media(max-width:900px) {
-  #idx-burger { display: flex; }
-}
 
 /* ── MOBILE DRAWER INDEX ── */
 #idx-mobile-menu {
@@ -1095,16 +1091,13 @@ footer {
   font-size: 11px;
   box-shadow: none;
 }
-@media(max-width:900px) {
-  #idx-mobile-menu { display: flex; }
-}
 
 .nav-sites-link {
-  color: var(--electric-light) !important;
+  color: var(--electric-light);
   position: relative;
 }
 .nav-sites-link::after {
-  background: var(--electric-light) !important;
+  background: var(--electric-light);
 }
 
 /* ── À PROPOS ── */
@@ -1149,10 +1142,10 @@ footer {
   line-height: 1.8;
 }
 .about-pivot {
-  font-size: 15px !important;
-  color: rgba(255,255,255,0.75) !important;
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
   border-left: 2px solid var(--electric);
-  padding-left: 18px !important;
+  padding-left: 18px;
   font-style: italic;
 }
 .about-pivot em { font-style: normal; color: var(--electric-light); }
@@ -1218,10 +1211,6 @@ footer {
 .about-dist-footer em {
   font-style: normal;
   color: var(--electric-light);
-}
-@media(max-width:900px) {
-  .about-grid { grid-template-columns: 1fr; gap: 48px; }
-  .about-distinction { position: static; }
 }
 .logo-name-row {
   display: flex;
@@ -2299,14 +2288,13 @@ window.addEventListener('scroll', () => {
 
 // ── MOBILE SCROLL ──
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-let scrollFrameCount = 0;
 let isScrolling = false;
 let scrollTimer = null;
 if (isMobile) {
   window.addEventListener('scroll', () => {
     isScrolling = true;
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => { isScrolling = false; scrollFrameCount = 0; }, 120);
+    scrollTimer = setTimeout(() => { isScrolling = false; }, 120);
   }, { passive: true });
 }
 
@@ -2452,6 +2440,8 @@ if (isMobile) {
   let blackHole = null;
 
   function spawnBlackHole(cx, cy) {
+    // Trou noir désactivé sur mobile — trop instable avec la barre Safari iOS
+    if (isMobile) return;
     // Average hub size for diameter calculation
     const avgHubR = 5;
     const targetR = avgHubR * 20 * 0.8 * 0.7; // -20% then -30%
