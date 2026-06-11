@@ -2328,8 +2328,9 @@ if (isMobile) {
     const newH = isMobile
       ? document.documentElement.clientHeight
       : canvas.offsetHeight;
-    // Sur mobile : ignore aussi les petits changements de hauteur (<120px = barre Safari)
-    if (isMobile && _lastW === newW && _lastH > 0 && Math.abs(newH - _lastH) < 120) return;
+    // Sur mobile : ne jamais recalibrer le canvas si le trou noir est actif
+    // ou si on est en train de scroller (barre Safari = resize intempestif)
+    if (isMobile && (blackHole || isScrolling)) return;
     _lastW = newW; _lastH = newH;
     W = canvas.width  = newW * DPR;
     H = canvas.height = newH * DPR;
