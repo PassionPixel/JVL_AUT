@@ -119,6 +119,9 @@ nav ul a:hover::after { transform: scaleX(1); transform-origin: left; }
   position: relative; overflow: hidden;
   background: var(--navy);
 }
+@supports (height: 100svh) {
+  #hero { height: 100svh; }
+}
 #three-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -2319,11 +2322,14 @@ if (isMobile) {
   let _lastW = 0, _lastH = 0;
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    // Sur mobile : utilise document.documentElement.clientHeight
+    // qui ne change PAS avec la barre Safari (contrairement à window.innerHeight et offsetHeight)
     const newW = canvas.offsetWidth;
-    const newH = canvas.offsetHeight;
-    // Sur mobile : ignore les resize qui ne changent que la hauteur
-    // → signature de la barre Safari qui apparaît/disparaît
-    if (isMobile && _lastW === newW && Math.abs(newH - _lastH) < 120) return;
+    const newH = isMobile
+      ? document.documentElement.clientHeight
+      : canvas.offsetHeight;
+    // Sur mobile : ignore aussi les petits changements de hauteur (<120px = barre Safari)
+    if (isMobile && _lastW === newW && _lastH > 0 && Math.abs(newH - _lastH) < 120) return;
     _lastW = newW; _lastH = newH;
     W = canvas.width  = newW * DPR;
     H = canvas.height = newH * DPR;
