@@ -2316,12 +2316,19 @@ if (isMobile) {
   let time = 0;
   // isMobile défini globalement
 
+  let _lastW = 0, _lastH = 0;
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    W = canvas.width = canvas.offsetWidth * DPR;
-    H = canvas.height = canvas.offsetHeight * DPR;
-    canvas.style.width = canvas.offsetWidth + 'px';
-    canvas.style.height = canvas.offsetHeight + 'px';
+    const newW = canvas.offsetWidth;
+    const newH = canvas.offsetHeight;
+    // Sur mobile : ignore les resize qui ne changent que la hauteur
+    // → signature de la barre Safari qui apparaît/disparaît
+    if (isMobile && _lastW === newW && Math.abs(newH - _lastH) < 120) return;
+    _lastW = newW; _lastH = newH;
+    W = canvas.width  = newW * DPR;
+    H = canvas.height = newH * DPR;
+    canvas.style.width  = newW + 'px';
+    canvas.style.height = newH + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     initParticles();
   }
