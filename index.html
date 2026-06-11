@@ -2307,10 +2307,18 @@ if (isMobile) {
   let time = 0;
   // isMobile défini globalement
 
+  // Sur mobile : fige la hauteur du hero en px dès le départ
+  // empêche Safari de redimensionner le canvas quand la barre apparaît
+  const heroEl = document.getElementById('hero');
+  if (isMobile && heroEl) {
+    const fixedH = document.documentElement.clientHeight;
+    heroEl.style.height = fixedH + 'px';
+    heroEl.style.minHeight = fixedH + 'px';
+  }
+
   let _resizeDone = false;
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    // Sur mobile : un seul resize au chargement, ignorer tout le reste
     if (isMobile && _resizeDone) return;
     const newW = canvas.offsetWidth;
     const newH = isMobile
@@ -2488,12 +2496,16 @@ if (isMobile) {
   }
 
   canvas.parentElement.addEventListener('click', e => {
-    // No interaction while black hole is active
     if (blackHole) return;
 
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    // Sur mobile : utilise les coordonnées canvas (pas parentElement)
+    // pour éviter le décalage dû à la barre Safari
+    const scaleX = (W / DPR) / rect.width;
+    const scaleY = (H / DPR) / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top)  * scaleY;
     const c = COLORS[Math.floor(rand(0, COLORS.length))];
 
     const userHubs = nodes.filter(n => n.userSpawned);
