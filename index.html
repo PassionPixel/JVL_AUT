@@ -3267,19 +3267,22 @@ if (isMobile) {
 
       ctx.restore();
 
-      // ── MASK CANVAS: solid void disc clips text at horizon ──
+      // ── MASK CANVAS ──
       const maskCanvas = document.getElementById('bh-mask-canvas');
       const maskFixed = document.getElementById('bh-mask-fixed');
 
-      // Calcule bhVpX/bhVpY une seule fois au spawn, puis les fige
-      // Sur mobile getBoundingClientRect change au scroll → dérive visuelle
-      if (!bh._vpFrozen) {
-        const heroRect3 = document.getElementById('hero').getBoundingClientRect();
-        bh._vpX = heroRect3.left + bh.x;
-        bh._vpY = heroRect3.top + bh.y;
-        if (isMobile) bh._vpFrozen = true; // fige sur mobile uniquement
-      } else if (!isMobile) {
-        // Desktop : recalcule normalement à chaque frame
+      // Sur mobile : on ne calcule que bh-mask-canvas (position:absolute dans hero)
+      // bh-mask-fixed (position:fixed) bouge avec la barre Safari → toujours désactivé sur mobile
+      if (isMobile) {
+        // Masque uniquement dans le canvas hero — coordonnées relatives, jamais de recalcul
+        if (!bh._vpFrozen) {
+          bh._vpX = bh.x;
+          bh._vpY = bh.y;
+          bh._vpFrozen = true;
+        }
+        if (maskFixed) maskFixed.style.display = 'none';
+      } else {
+        // Desktop : recalcul normal à chaque frame
         const heroRect3 = document.getElementById('hero').getBoundingClientRect();
         bh._vpX = heroRect3.left + bh.x;
         bh._vpY = heroRect3.top + bh.y;
