@@ -2319,24 +2319,21 @@ if (isMobile) {
   let time = 0;
   // isMobile défini globalement
 
-  let _lastW = 0, _lastH = 0;
+  let _resizeDone = false;
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    // Sur mobile : utilise document.documentElement.clientHeight
-    // qui ne change PAS avec la barre Safari (contrairement à window.innerHeight et offsetHeight)
+    // Sur mobile : un seul resize au chargement, ignorer tout le reste
+    if (isMobile && _resizeDone) return;
     const newW = canvas.offsetWidth;
     const newH = isMobile
       ? document.documentElement.clientHeight
       : canvas.offsetHeight;
-    // Sur mobile : ne jamais recalibrer le canvas si le trou noir est actif
-    // ou si on est en train de scroller (barre Safari = resize intempestif)
-    if (isMobile && (blackHole || isScrolling)) return;
-    _lastW = newW; _lastH = newH;
     W = canvas.width  = newW * DPR;
     H = canvas.height = newH * DPR;
     canvas.style.width  = newW + 'px';
     canvas.style.height = newH + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    if (isMobile) _resizeDone = true;
     initParticles();
   }
 
