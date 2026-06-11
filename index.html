@@ -3395,6 +3395,7 @@ if (isMobile) {
 
   // Prevent the old Three.js init from running
   window.addEventListener('resize', () => {
+    if (isMobile) return; // Safari iOS — jamais de resize sur mobile
     W = canvas.width = canvas.offsetWidth * window.devicePixelRatio;
     H = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
     initParticles();
