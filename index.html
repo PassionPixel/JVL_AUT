@@ -979,6 +979,12 @@ footer {
   footer { padding: 40px 24px; }
   .footer-inner { flex-direction: column; text-align: center; }
   .hero-stats { display: none; }
+  #hero {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-content { width: 100%; }
   .services-top { flex-direction: column; gap: 20px; }
   .form-row { grid-template-columns: 1fr; }
   body { cursor: auto; }
@@ -2289,10 +2295,11 @@ window.addEventListener('scroll', () => {
 });
 
 // ── MOBILE SCROLL ──
+const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 let scrollFrameCount = 0;
 let isScrolling = false;
 let scrollTimer = null;
-if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+if (isMobile) {
   window.addEventListener('scroll', () => {
     isScrolling = true;
     clearTimeout(scrollTimer);
@@ -2307,7 +2314,7 @@ if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
   let W, H, mouseX = 0, mouseY = 0, lastMouseX = 0, lastMouseY = 0;
   let mouseVX = 0, mouseVY = 0;
   let time = 0;
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  // isMobile défini globalement
 
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
