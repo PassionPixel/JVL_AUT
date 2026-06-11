@@ -205,30 +205,116 @@ h1 {
 
 /* Stats bar */
 .hero-stats {
-  position: absolute; bottom: 0; left: 0; right: 0;
+  position: absolute; bottom: 32px; left: 0; right: 0;
   display: flex; justify-content: center;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  background: rgba(11,22,40,0.6);
-  backdrop-filter: blur(20px);
+  gap: 12px;
+  padding: 0 40px;
   z-index: 10;
   opacity: 0;
 }
 .stat-item {
-  flex: 1; max-width: 220px;
-  padding: 24px 0;
-  text-align: center;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  flex: 1; max-width: 200px;
+  height: 64px;
+  padding: 0 16px;
+  background: rgba(11,22,40,0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
   position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition:
+    border-color 0.55s cubic-bezier(0.16,1,0.3,1),
+    background 0.55s cubic-bezier(0.16,1,0.3,1),
+    transform 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-.stat-item:last-child { border-right: none; }
+.stat-item:hover {
+  border-color: transparent;
+  background: transparent;
+  backdrop-filter: none;
+}
+.stat-item::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14,165,233,0.4), transparent);
+  transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1);
+}
+.stat-item:hover::before { opacity: 0; }
+
+/* Icône + label : fade out au hover */
+.stat-item .stat-icon,
+.stat-item .stat-lbl {
+  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1),
+              transform 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.stat-item:hover .stat-icon {
+  opacity: 0;
+  transform: scale(0.7);
+}
+.stat-item:hover .stat-lbl {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* Valeur : grossit au hover */
+.stat-item .stat-val {
+  transition: font-size 0.5s cubic-bezier(0.16,1,0.3,1),
+              filter 0.5s cubic-bezier(0.16,1,0.3,1),
+              transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.stat-item:hover .stat-val {
+  font-size: 38px !important;
+  filter: drop-shadow(0 0 10px rgba(56,189,248,0.55)) drop-shadow(0 0 24px rgba(14,165,233,0.25));
+}
+.stat-top { display: none; }
+.stat-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+.stat-icon {
+  font-size: 20px;
+  opacity: 0.85;
+  line-height: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+}
+.stat-right {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 .stat-val {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 900; font-size: 32px;
-  color: var(--white); line-height: 1;
-  margin-bottom: 4px;
+  font-weight: 900; font-size: 22px;
+  line-height: 1;
+  background: linear-gradient(135deg, #ffffff 30%, #38BDF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 0 4px rgba(56,189,248,0.3))
+    drop-shadow(0 0 10px rgba(14,165,233,0.15));
 }
-.stat-val span { color: var(--electric); }
-.stat-lbl { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+.stat-val span {
+  background: linear-gradient(135deg, #ffffff 30%, #38BDF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-lbl {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
 
 /* scroll hint */
 .scroll-hint {
@@ -900,6 +986,110 @@ footer {
   body * { cursor: auto !important; }
 }
 
+/* ── BURGER FIXE INDEX ── */
+#idx-burger {
+  display: none;
+  position: fixed;
+  top: 14px; right: 16px;
+  z-index: 800;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+#idx-burger.open { background: rgba(14,165,233,0.1); }
+#idx-burger svg { overflow: visible; }
+#idx-burger .arc {
+  fill: none; stroke: #ffffff;
+  stroke-width: 1.5; stroke-linecap: round;
+}
+#idx-burger .arc1 {
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), stroke 0.3s;
+  transform-origin: 14px 14px;
+}
+#idx-burger .arc2 {
+  opacity: 0.45;
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1) 0.05s, stroke 0.3s, opacity 0.3s;
+  transform-origin: 14px 14px;
+}
+#idx-burger.open .arc1 { transform: rotate(135deg); stroke: #38BDF8; }
+#idx-burger.open .arc2 { transform: rotate(-45deg); stroke: #38BDF8; opacity: 1; }
+@media(max-width:900px) {
+  #idx-burger { display: flex; }
+}
+
+/* ── MOBILE DRAWER INDEX ── */
+#idx-mobile-menu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(6,13,26,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 550;
+  padding: 90px 32px 48px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+}
+#idx-mobile-menu.open {
+  transform: translateY(0);
+  pointer-events: all;
+}
+/* Styles de base des liens — sans !important pour ne pas toucher au desktop */
+#idx-mobile-menu a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  display: block;
+  text-align: left;
+  transition: color 0.2s, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(12px);
+}
+#idx-mobile-menu.open a { opacity: 1; transform: translateY(0); }
+#idx-mobile-menu.open a:nth-child(1) { transition-delay: 0.04s; }
+#idx-mobile-menu.open a:nth-child(2) { transition-delay: 0.08s; }
+#idx-mobile-menu.open a:nth-child(3) { transition-delay: 0.12s; }
+#idx-mobile-menu.open a:nth-child(4) { transition-delay: 0.16s; }
+#idx-mobile-menu.open a:nth-child(5) { transition-delay: 0.20s; }
+#idx-mobile-menu.open a:nth-child(6) { transition-delay: 0.24s; }
+#idx-mobile-menu a:hover { color: #ffffff; }
+/* Sites web — bleu */
+#idx-mobile-menu a.nav-sites-link { color: #38BDF8; }
+/* Audit gratuit — fond bleu, texte navy */
+#idx-mobile-menu a.nav-cta {
+  margin-top: 8px;
+  color: #060D1A;
+  background: #0EA5E9;
+  border: none;
+  border-bottom: none;
+  padding: 14px 24px;
+  border-radius: 6px;
+  text-align: center;
+  letter-spacing: 2px;
+  font-size: 11px;
+  box-shadow: none;
+}
+@media(max-width:900px) {
+  #idx-mobile-menu { display: flex; }
+}
+
 .nav-sites-link {
   color: var(--electric-light) !important;
   position: relative;
@@ -908,7 +1098,122 @@ footer {
   background: var(--electric-light) !important;
 }
 
-/* ── LOGO DOT ANIMÉ ── */
+/* ── À PROPOS ── */
+#about { background: var(--navy-2); border-top: 1px solid rgba(255,255,255,0.04); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.about-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--electric);
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+.about-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 36px;
+}
+.about-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--electric), var(--electric-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.about-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.about-body p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.8;
+}
+.about-pivot {
+  font-size: 15px !important;
+  color: rgba(255,255,255,0.75) !important;
+  border-left: 2px solid var(--electric);
+  padding-left: 18px !important;
+  font-style: italic;
+}
+.about-pivot em { font-style: normal; color: var(--electric-light); }
+
+/* Droite */
+.about-distinction { position: sticky; top: 100px; }
+.about-distinction-inner {
+  background: rgba(14,165,233,0.04);
+  border: 1px solid rgba(14,165,233,0.1);
+  border-radius: 20px;
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.about-dist-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(14,165,233,0.5);
+}
+.about-dist-text {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+}
+.about-services {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.about-service-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.about-service-icon {
+  width: 36px; height: 36px;
+  background: rgba(14,165,233,0.08);
+  border: 1px solid rgba(14,165,233,0.15);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.about-service-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 13px;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+.about-service-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+.about-dist-footer {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.6;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 20px;
+}
+.about-dist-footer em {
+  font-style: normal;
+  color: var(--electric-light);
+}
+@media(max-width:900px) {
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-distinction { position: static; }
+}
 .logo-name-row {
   display: flex;
   align-items: baseline;
@@ -1146,11 +1451,29 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
     <li><a href="web.html" class="nav-sites-link" id="navSitesLink">Sites web ✦</a></li>
     <li><a href="#pricing">Tarifs</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="#about">À propos</a></li>
     <li><a href="#contact" class="nav-cta">Audit gratuit</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
+<!-- BURGER FIXE -->
+<button id="idx-burger" aria-label="Menu">
+  <svg width="28" height="28" viewBox="0 0 28 28">
+    <path class="arc arc1" d="M 6,14 A 8,8 0 0,1 22,14"/>
+    <path class="arc arc2" d="M 6,14 A 8,8 0 0,0 22,14"/>
+  </svg>
+</button>
+
+<!-- MOBILE DRAWER -->
+<div id="idx-mobile-menu">
+  <a href="#value">Approche</a>
+  <a href="#services">Services</a>
+  <a href="web.html" class="nav-sites-link">Sites web ✦</a>
+  <a href="#pricing">Tarifs</a>
+  <a href="#faq">FAQ</a>
+  <a href="#about">À propos</a>
+  <a href="#contact" class="nav-cta">Audit gratuit</a>
+</div>
 <section id="hero">
   <canvas id="three-canvas"></canvas>
   <canvas id="bh-mask-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:15;display:none;"></canvas>
@@ -1158,7 +1481,7 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
   <div class="hero-content">
     <div class="hero-eyebrow">
       <div class="eyebrow-dot"></div>
-      Automatisation & IA · PME Francophones
+      Automatisation & IA · PME
     </div>
     <h1>Automatisez.<br><span class="h1-gradient">Libérez-vous.</span><br>Développez.</h1>
     <p class="hero-sub">Les PME perdent 5 à 10h par semaine sur des tâches répétitives. Je construis des systèmes intelligents qui tournent seuls — en quelques jours.</p>
@@ -1174,10 +1497,64 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
     </div>
   </div>
   <div class="hero-stats">
-    <div class="stat-item"><div class="stat-val">5<span>–10h</span></div><div class="stat-lbl">économisées / semaine</div></div>
-    <div class="stat-item"><div class="stat-val"><span>–</span>80<span>%</span></div><div class="stat-lbl">de tâches manuelles</div></div>
-    <div class="stat-item"><div class="stat-val"><span>Dès </span>3<span>j</span></div><div class="stat-lbl">livraison en production</div></div>
-    <div class="stat-item"><div class="stat-val">7<span>+</span></div><div class="stat-lbl">solutions prêtes</div></div>
+    <div class="stat-item">
+      <div class="stat-inner">
+        <div class="stat-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="7" stroke="#38BDF8" stroke-width="1.4"/>
+            <path d="M9 5v4l2.5 2.5" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-val">5<span>–10h</span></div>
+          <div class="stat-lbl">économisées par semaine</div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-inner">
+        <div class="stat-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M10 2L3.5 10.5H8.5L8 16L14.5 7.5H9.5L10 2Z"
+              stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+              fill="rgba(56,189,248,0.08)"/>
+          </svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-val"><span>–</span>80<span>%</span></div>
+          <div class="stat-lbl">de tâches manuelles</div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-inner">
+        <div class="stat-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+              stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-val">100<span>%</span></div>
+          <div class="stat-lbl">sur mesure, vos outils</div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-inner">
+        <div class="stat-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3.5 9.5L7 13L14.5 5"
+              stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-val" style="font-size:17px">Satisfait</div>
+          <div class="stat-lbl">ou refait — sans condition</div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="scroll-hint">
     <div class="scroll-hint-line"></div>
@@ -1412,11 +1789,52 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
 
 
 <!-- SITES WEB TEASER -->
-<section id="sites" style="background:var(--navy-2);border-top:1px solid rgba(255,255,255,0.04);padding:0;overflow:hidden;">
-  <div style="display:grid;grid-template-columns:1fr 1fr;min-height:70vh;">
+<section id="sites" style="background:#0B1628;border-top:1px solid rgba(255,255,255,0.04);padding:0;overflow:hidden;">
+  <style>
+    .teaser-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
+      background: #0B1628;
+    }
+    .teaser-visual {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg,#0B1628 0%,#0F2040 50%,#0B1628 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+    @media (max-width: 768px) {
+      .teaser-grid {
+        grid-template-columns: 1fr;
+        background: #0B1628;
+      }
+      .teaser-visual {
+        min-height: 320px;
+        order: 1;
+        padding: 32px 16px;
+        background: linear-gradient(135deg,#0B1628 0%,#0F2040 50%,#0B1628 100%) !important;
+        overflow: hidden;
+      }
+      .teaser-content {
+        order: 2;
+        background: #0B1628;
+      }
+      #teaserImg {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        display: block;
+        background: transparent !important;
+      }
+    }
+  </style>
+  <div class="teaser-grid">
 
     <!-- Illustration abstraite côté gauche -->
-    <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,#0B1628 0%,#0F2040 50%,#0B1628 100%);display:flex;align-items:center;justify-content:center;min-height:700px;">
+    <div class="teaser-visual">
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(14,165,233,0.08) 0%,transparent 70%);"></div>
       <style>
   .svg-rect-hover { cursor: pointer; transition: filter 0.3s; }
@@ -1424,7 +1842,7 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
   .svg-rect-hover rect:first-child { transition: stroke 0.3s; }
   .svg-rect-hover:hover rect:first-child { stroke: rgba(14,165,233,0.8); }
 </style>
-<svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;opacity:0.95;" id="teaserImg">
+<svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:min(680px,100%);height:auto;opacity:0.95;background:transparent;display:block;" id="teaserImg">
         <!-- Lignes de grille perspective -->
         <line x1="260" y1="60" x2="40" y2="340" stroke="rgba(14,165,233,0.1)" stroke-width="1"/>
         <line x1="260" y1="60" x2="480" y2="340" stroke="rgba(14,165,233,0.1)" stroke-width="1"/>
@@ -1503,7 +1921,12 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
     </div>
 
     <!-- Contenu côté droit -->
-    <div style="display:flex;flex-direction:column;justify-content:center;padding:80px 72px;" class="reveal">
+    <div style="display:flex;flex-direction:column;justify-content:center;padding:80px 72px;" class="reveal teaser-content">
+      <style>
+        @media (max-width: 768px) {
+          .teaser-content { padding: 48px 24px !important; }
+        }
+      </style>
       <span class="section-label" style="margin-bottom:24px;">Sites web premium</span>
       <h2 style="font-size:clamp(36px,4vw,60px);margin-bottom:24px;line-height:1.05;">
         Un système puissant mérite<br>une <span class="h1-gradient">image à la hauteur.</span>
@@ -1608,6 +2031,62 @@ body.bh-cursor-hidden #cursor-dot { opacity: 0 !important; transition: opacity 0
         Réserver mon audit
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+    </div>
+  </div>
+</section>
+
+<!-- À PROPOS -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid rv">
+
+      <!-- Côté gauche — texte -->
+      <div class="about-text">
+        <div class="about-tag">À propos</div>
+        <h2 class="about-title">De la chimie <em>au code.</em></h2>
+        <div class="about-body">
+          <p>Pendant 10 ans, j'ai évolué dans l'industrie chimique — de grands groupes internationaux comme GSK aux laboratoires indépendants. Un environnement exigeant, où chaque processus compte et chaque détail a son importance.</p>
+          <p>Mais une constante m'a toujours accompagné : une curiosité profonde pour l'informatique, les systèmes, l'automatisation. Ce n'était plus un hobby — c'était une évidence.</p>
+          <p>J'ai alors suivi une formation intensive de Full Stack Engineer (HTML, CSS, JS, Python, SQL), avec une spécialisation en automatisation business.</p>
+          <p class="about-pivot">Ce changement de cap n'est pas un abandon — c'est une évolution. Les mêmes qualités qui font un bon chimiste font un bon développeur : <em>rigueur, méthode, et l'exigence du détail.</em></p>
+        </div>
+      </div>
+
+      <!-- Côté droit — distinction -->
+      <div class="about-distinction rv">
+        <div class="about-distinction-inner">
+          <div class="about-dist-label">Ce qui me distingue</div>
+          <p class="about-dist-text">Je traite chaque projet comme s'il était le mien. Pas de solution générique. Pas de template.</p>
+          <div class="about-services">
+            <div class="about-service-item">
+              <div class="about-service-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 9h4l2-6 2 12 2-6h2" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="about-service-title">Automatisation sur mesure</div>
+                <div class="about-service-desc">Qui libère vos équipes des tâches répétitives — pour qu'elles se concentrent sur l'essentiel.</div>
+              </div>
+            </div>
+            <div class="about-service-item">
+              <div class="about-service-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect x="2" y="3" width="14" height="10" rx="2" stroke="#38BDF8" stroke-width="1.4"/>
+                  <path d="M6 16h6M9 13v3" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M5 7h2M8 7h5M5 9.5h8" stroke="#38BDF8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="about-service-title">Sites web premium</div>
+                <div class="about-service-desc">Qui marquent les esprits dès le premier scroll — conçus pour convertir, pas juste pour impressionner.</div>
+              </div>
+            </div>
+          </div>
+          <p class="about-dist-footer">Tout est conçu pour <em>vos</em> processus, <em>vos</em> outils, <em>votre</em> croissance.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1808,6 +2287,18 @@ magnetTargets.forEach(el => {
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
 });
+
+// ── MOBILE SCROLL ──
+let scrollFrameCount = 0;
+let isScrolling = false;
+let scrollTimer = null;
+if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+  window.addEventListener('scroll', () => {
+    isScrolling = true;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => { isScrolling = false; scrollFrameCount = 0; }, 120);
+  }, { passive: true });
+}
 
 // ── ULTRA-PREMIUM PARTICLE SYSTEM ──
 (function() {
@@ -2772,10 +3263,22 @@ window.addEventListener('scroll', () => {
       // ── MASK CANVAS: solid void disc clips text at horizon ──
       const maskCanvas = document.getElementById('bh-mask-canvas');
       const maskFixed = document.getElementById('bh-mask-fixed');
-      const heroRect3 = document.getElementById('hero').getBoundingClientRect();
-      // Viewport position of black hole center
-      const bhVpX = heroRect3.left + bh.x;
-      const bhVpY = heroRect3.top + bh.y;
+
+      // Calcule bhVpX/bhVpY une seule fois au spawn, puis les fige
+      // Sur mobile getBoundingClientRect change au scroll → dérive visuelle
+      if (!bh._vpFrozen) {
+        const heroRect3 = document.getElementById('hero').getBoundingClientRect();
+        bh._vpX = heroRect3.left + bh.x;
+        bh._vpY = heroRect3.top + bh.y;
+        if (isMobile) bh._vpFrozen = true; // fige sur mobile uniquement
+      } else if (!isMobile) {
+        // Desktop : recalcule normalement à chaque frame
+        const heroRect3 = document.getElementById('hero').getBoundingClientRect();
+        bh._vpX = heroRect3.left + bh.x;
+        bh._vpY = heroRect3.top + bh.y;
+      }
+      const bhVpX = bh._vpX;
+      const bhVpY = bh._vpY;
 
       function drawMask(mc2, cx2, cy2) {
         const dpr2 = window.devicePixelRatio || 1;
@@ -2796,7 +3299,7 @@ window.addEventListener('scroll', () => {
         maskCanvas.style.display = 'block';
         drawMask(maskCanvas, bh.x, bh.y);
       }
-      if (maskFixed && bh._textAbsorbing) {
+      if (maskFixed && bh._textAbsorbing && !isMobile) {
         maskFixed.style.display = 'block';
         drawMask(maskFixed, bhVpX, bhVpY);
       }
@@ -3322,6 +3825,29 @@ document.getElementById('footer-logo').addEventListener('click', e => {
   e.preventDefault();
   playLogoAnimation('footer');
 });
+
+// ── BURGER MENU INDEX ──
+(function() {
+  const burger = document.getElementById('idx-burger');
+  const menu   = document.getElementById('idx-mobile-menu');
+  if (!burger || !menu) return;
+
+  function openMenu() {
+    burger.classList.add('open');
+    menu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    burger.classList.remove('open');
+    menu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', () => {
+    menu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+})();
 </script>
 
 </body>

@@ -151,7 +151,122 @@ nav ul a:hover{color:var(--white);}
 .nav-active{color:var(--white) !important;}
 .nav-cta{border:1px solid var(--white12) !important;color:var(--chrome) !important;padding:10px 22px;letter-spacing:1.5px !important;transition:all .3s !important;border-radius:6px;}
 .nav-cta:hover{border-color:var(--white40) !important;color:var(--white) !important;}
-@media(max-width:900px){nav{padding:16px 24px;}nav ul{display:none;}}
+@media(max-width:900px){
+  nav { padding:16px 24px; }
+  nav ul { display:none; }
+}
+
+/* ── BURGER ── */
+/* Burger dans nav — caché, remplacé par burger-fixed */
+#burger { display: none; }
+
+/* ── BURGER FIXE — toujours au dessus du drawer ── */
+#burger-fixed {
+  display: none;
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 800;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+#burger-fixed.open { background: rgba(14,165,233,0.1); }
+#burger-fixed svg { overflow: visible; }
+#burger-fixed .arc {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+#burger-fixed .arc1 {
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), stroke 0.3s;
+  transform-origin: 14px 14px;
+}
+#burger-fixed .arc2 {
+  opacity: 0.45;
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1) 0.05s, stroke 0.3s, opacity 0.3s;
+  transform-origin: 14px 14px;
+}
+#burger-fixed .arc-h-line {
+  stroke: rgba(255,255,255,0.2);
+  stroke-width: 1;
+  stroke-linecap: round;
+  transition: opacity 0.25s;
+}
+#burger-fixed.open .arc1 { transform: rotate(135deg); stroke: #38BDF8; }
+#burger-fixed.open .arc2 { transform: rotate(-45deg); stroke: #38BDF8; opacity: 1; }
+#burger-fixed.open .arc-h-line { opacity: 0; }
+
+@media(max-width:900px) {
+  #burger-fixed { display: flex; }
+}
+
+/* ── MOBILE DRAWER ── */
+#mobile-menu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(5,5,5,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 550;
+  padding: 90px 32px 48px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+@media(max-width:900px) {
+  #mobile-menu { display: flex; }
+}
+#mobile-menu.open {
+  transform: translateY(0);
+  pointer-events: all;
+}
+#mobile-menu a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 0.2s;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: color 0.2s, opacity 0.3s ease, transform 0.3s ease;
+}
+#mobile-menu.open a {
+  opacity: 1;
+  transform: translateY(0);
+}
+#mobile-menu.open a:nth-child(2) { transition-delay: 0.05s; }
+#mobile-menu.open a:nth-child(3) { transition-delay: 0.1s; }
+#mobile-menu.open a:nth-child(4) { transition-delay: 0.15s; }
+#mobile-menu.open a:nth-child(5) { transition-delay: 0.2s; }
+#mobile-menu.open a:nth-child(6) { transition-delay: 0.25s; }
+#mobile-menu a:hover { color: #ffffff; }
+#mobile-menu a.nav-cta {
+  margin-top: 16px;
+  border: 1px solid rgba(14,165,233,0.4) !important;
+  color: #38BDF8 !important;
+  padding: 14px 24px;
+  border-radius: 6px;
+  text-align: center;
+  letter-spacing: 2px;
+  font-size: 11px;
+}
+
+/* Bouton fermer — géré par le burger arc */
+#menu-close { display: none; }
 
 /* ── HERO ── */
 #hero{height:100vh;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
@@ -285,7 +400,16 @@ h1 em{font-style:italic;color:var(--chrome);}
 .stars-b{color:var(--blue2);font-size:13px;}
 .stars-w{color:var(--white70);font-size:13px;}
 .comp-note{text-align:center;margin-top:24px;font-size:12px;color:var(--white40);font-weight:300;}
-@media(max-width:900px){#comparatif .si{overflow-x:auto;}.ctg{min-width:600px;}}
+@media(max-width:900px){
+  #comparatif .si { overflow-x:unset; }
+  .ctg {
+    min-width: unset !important;
+    grid-template-columns: 1.4fr 1fr 1fr !important;
+  }
+  .col-hide-mobile { display:none !important; }
+  .ctg .ch.jvl { font-size:12px; }
+  .ctg .ch:nth-child(4) { font-size:11px; }
+}
 
 /* ── TARIFS ── */
 
@@ -350,6 +474,23 @@ h1 em{font-style:italic;color:var(--chrome);}
 .cta-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(48px,7vw,100px);line-height:.9;letter-spacing:-3px;color:var(--white);margin-bottom:36px;}
 .cta-h em{font-style:italic;color:var(--chrome);}
 .cta-p{font-size:15px;color:var(--white70);font-weight:300;line-height:1.9;margin-bottom:52px;}
+.cta-about {
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  max-width: 520px;
+  margin: -32px auto 52px;
+  line-height: 1.7;
+  font-style: italic;
+}
+.cta-about-link {
+  color: #38BDF8;
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 600;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.cta-about-link:hover { opacity: 1; }
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 .btn-main{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--white12);color:var(--white);padding:17px 42px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .3s;border-radius:6px;}
 .btn-main:hover{border-color:var(--white40);background:var(--white06);}
@@ -667,7 +808,32 @@ body::after {
     <li><a href="#tarifs">Tarifs</a></li>
     <li><a href="#cta" class="nav-cta">Démarrer</a></li>
   </ul>
+  <button id="burger" aria-label="Menu">
+    <svg width="28" height="28" viewBox="0 0 28 28">
+      <line class="h-line" x1="4" y1="14" x2="24" y2="14"/>
+      <path class="arc arc1" d="M 6,14 A 8,8 0 0,1 22,14"/>
+      <path class="arc arc2" d="M 6,14 A 8,8 0 0,0 22,14"/>
+    </svg>
+  </button>
 </nav>
+
+<!-- BURGER FIXE (toujours au dessus du drawer) -->
+<button id="burger-fixed" aria-label="Menu">
+  <svg width="28" height="28" viewBox="0 0 28 28">
+    <path class="arc arc1" d="M 6,14 A 8,8 0 0,1 22,14"/>
+    <path class="arc arc2" d="M 6,14 A 8,8 0 0,0 22,14"/>
+  </svg>
+</button>
+
+<!-- MOBILE MENU DRAWER -->
+<div id="mobile-menu">
+  <button id="menu-close" aria-label="Fermer">×</button>
+  <a href="index.html">Automation</a>
+  <a href="#why">Approche</a>
+  <a href="#process">Process</a>
+  <a href="#tarifs">Tarifs</a>
+  <a href="#cta" class="nav-cta">Démarrer</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -968,6 +1134,9 @@ body::after {
     <h2 class="cta-h rv">Créons quelque<br><em>chose d'unique.</em></h2>
     <p class="cta-p rv">Un échange de 30 minutes suffit. Devis gratuit sous 48h. Pas d'engagement.</p>
 
+    <!-- À propos — version courte -->
+    <p class="cta-about rv">Je ne suis pas une agence. Je suis un développeur indépendant qui traite votre projet avec la rigueur de quelqu'un qui vient d'un monde où l'approximation n'existe pas. <a href="index.html#about" class="cta-about-link">En savoir plus →</a></p>
+
     <!-- FORMULAIRE -->
     <form action="https://formspree.io/f/xojbwanw" method="POST" class="sites-form rv" id="sitesForm">
       <div class="sf-grid">
@@ -1179,7 +1348,46 @@ logo.addEventListener('click', () => {
   });
   document.addEventListener('click', e => { if(!sel.contains(e.target)) sel.classList.remove('open'); });
 })();
+// ── BURGER MENU ──
+const burger = document.getElementById('burger-fixed');
+const mobileMenu = document.getElementById('mobile-menu');
+const menuClose = document.getElementById('menu-close');
 
+function openMenu() {
+  burger.classList.add('open');
+  mobileMenu.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+if (burger) burger.addEventListener('click', () => {
+  mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+});
+if (menuClose) menuClose.addEventListener('click', closeMenu);
+if (mobileMenu) {
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+}
+
+// ── TABLEAU COMPARATIF MOBILE ──
+(function() {
+  if (window.innerWidth > 900) return; // desktop intact
+  const ctg = document.querySelector('.ctg');
+  if (!ctg) return;
+  const children = Array.from(ctg.children);
+  const COLS = 5;
+  children.forEach((el, i) => {
+    const colPos = i % COLS;
+    if (colPos === 1 || colPos === 2) {
+      el.classList.add('col-hide-mobile');
+    }
+  });
+})();
 
 </script>
 </body>
