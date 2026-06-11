@@ -986,12 +986,7 @@ footer {
   body { cursor: auto; }
   #cursor-dot { display: none; }
   body * { cursor: auto !important; }
-  /* Burger & drawer */
-  #idx-burger { display: flex; }
-  #idx-mobile-menu { display: flex; }
-  /* À propos */
-  .about-grid { grid-template-columns: 1fr; gap: 48px; }
-  .about-distinction { position: static; }
+  /* Burger & drawer — règles mobiles après leurs définitions CSS */
 }
 
 /* ── BURGER FIXE INDEX ── */
@@ -1026,6 +1021,7 @@ footer {
 }
 #idx-burger.open .arc1 { transform: rotate(135deg); stroke: #38BDF8; }
 #idx-burger.open .arc2 { transform: rotate(-45deg); stroke: #38BDF8; opacity: 1; }
+@media(max-width:900px) { #idx-burger { display: flex; } }
 
 /* ── MOBILE DRAWER INDEX ── */
 #idx-mobile-menu {
@@ -1091,8 +1087,7 @@ footer {
   font-size: 11px;
   box-shadow: none;
 }
-
-.nav-sites-link {
+@media(max-width:900px) { #idx-mobile-menu { display: flex; } }
   color: var(--electric-light);
   position: relative;
 }
@@ -1107,6 +1102,10 @@ footer {
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: start;
+}
+@media(max-width:900px) {
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-distinction { position: static; }
 }
 .about-tag {
   font-family: 'Montserrat', sans-serif;
