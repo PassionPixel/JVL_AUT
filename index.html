@@ -2448,8 +2448,6 @@ if (isMobile) {
   let blackHole = null;
 
   function spawnBlackHole(cx, cy) {
-    // Trou noir désactivé sur mobile — trop instable avec la barre Safari iOS
-    if (isMobile) return;
     // Average hub size for diameter calculation
     const avgHubR = 5;
     const targetR = avgHubR * 20 * 0.8 * 0.7; // -20% then -30%
