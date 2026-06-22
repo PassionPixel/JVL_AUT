@@ -5,6 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>html,body{background:#050505;}</style>
 <title>JVL — Sites Web Premium</title>
+<meta name="description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Livraison 5–10 jours, dès 1 200€.">
+<link rel="canonical" href="https://www.jvlautomation.com/web.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.jvlautomation.com/web.html">
+<meta property="og:title" content="JVL — Sites Web Premium">
+<meta property="og:description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Dès 1 200€.">
+<meta property="og:image" content="https://www.jvlautomation.com/og-image-web.jpg">
+<meta property="og:locale" content="fr_BE">
+<meta property="og:site_name" content="JVL Automation">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JVL — Sites Web Premium">
+<meta name="twitter:description" content="Sites web premium sur mesure — animations cinématiques, Three.js, GSAP. Dès 1 200€.">
+<meta name="twitter:image" content="https://www.jvlautomation.com/og-image-web.jpg">
+
+<!-- Schema.org Service -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Création de sites web premium",
+  "provider": {
+    "@type": "ProfessionalService",
+    "name": "JVL Automation",
+    "url": "https://www.jvlautomation.com/"
+  },
+  "areaServed": ["BE", "FR", "CH"],
+  "description": "Sites web premium sur mesure — animations cinématiques, Three.js, GSAP, sans CMS.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "EUR",
+    "lowPrice": "1200",
+    "highPrice": "3500"
+  }
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='5.5' fill='%230EA5E9'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='%2338BDF8'/%3E%3Ccircle cx='53' cy='11' r='3.5' fill='%2338BDF8'/%3E%3Ccircle cx='11' cy='53' r='3.5' fill='%2338BDF8'/%3E%3Ccircle cx='53' cy='53' r='3.5' fill='%2338BDF8'/%3E%3Ccircle cx='32' cy='4' r='2.5' fill='%230EA5E9'/%3E%3Ccircle cx='32' cy='60' r='2.5' fill='%230EA5E9'/%3E%3Ccircle cx='4' cy='32' r='2.5' fill='%230EA5E9'/%3E%3Ccircle cx='60' cy='32' r='2.5' fill='%230EA5E9'/%3E%3Cline x1='32' y1='26.5' x2='11' y2='11' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='32' y1='26.5' x2='53' y2='11' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='11' y2='53' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='53' y2='53' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='26.5' y1='32' x2='4' y2='32' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='37.5' y1='32' x2='60' y2='32' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='32' y1='26.5' x2='32' y2='4' stroke='%230EA5E9' stroke-width='1.5'/%3E%3Cline x1='32' y1='37.5' x2='32' y2='60' stroke='%230EA5E9' stroke-width='1.5'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -434,6 +474,10 @@ h1 em{font-style:italic;color:var(--chrome);}
 .tarifs-h em{font-style:italic;color:var(--chrome);}
 .tarifs-sub{font-size:14px;color:var(--white70);text-align:center;font-weight:300;margin-bottom:64px;}
 .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;background:transparent;isolation:isolate;}
+.tgrid-2{grid-template-columns:repeat(2,1fr);max-width:900px;margin:0 auto;}
+.tc-price-sep{font-size:0.5em;opacity:0.4;margin:0 4px;}
+.tc-price-plus{font-size:0.6em;opacity:0.6;margin-right:2px;}
+.tc-note{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;margin-top:16px;font-style:italic;}
 .tc{background:var(--black2);padding:48px 40px;position:relative;border:1px solid rgba(255,255,255,0.08);border-radius:8px;transition:border-color .3s,transform .3s;display:flex;flex-direction:column;isolation:isolate;}
 .tc:hover{border-color:rgba(255,255,255,0.4);transform:translateY(-6px);}
 
@@ -854,7 +898,7 @@ body::after {
       <span class="h1l"><span class="h1w" id="hw3">les esprits.</span></span>
     </h1>
     <div class="hero-bottom" id="hbot">
-      <p class="hero-desc">Pas de WordPress, pas de template. Du code sur mesure — GSAP, parallax, animations cinématiques. Pour les entreprises qui refusent d'être ordinaires.</p>
+      <p class="hero-desc">Pas de WordPress, pas de template. Du sur-mesure qui capte l'attention dès la première seconde. Pour les entreprises qui refusent d'être ordinaires.</p>
       <a href="#why" class="hero-cta">Découvrir →</a>
     </div>
   </div>
@@ -881,9 +925,9 @@ body::after {
       </div>
       <div class="why-items">
         <div class="wi rv"><div class="wi-num">01</div><div><h3>Technologie premium sur mesure</h3><p>Three.js, GSAP, Canvas 2D, transitions de page, curseur avancé — intégrés nativement, sans plugin, sans conflit.</p></div></div>
-        <div class="wi rv"><div class="wi-num">02</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site.</p></div></div>
-        <div class="wi rv"><div class="wi-num">03</div><div><h3>3× plus rapide</h3><p>Un site statique charge 3 fois plus vite qu'un WordPress. Google vous récompense. Votre image en bénéficie.</p></div></div>
-        <div class="wi rv"><div class="wi-num">04</div><div><h3>Délai maîtrisé</h3><p>Livraison sous 10 jours — dès que votre projet démarre. Une agence prend 4 à 8 semaines.</p></div></div>
+        <div class="wi rv"><div class="wi-num">02</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site. Un site statique charge 3x plus vite qu'un WordPress — Google vous récompense.</p></div></div>
+        <div class="wi rv"><div class="wi-num">03</div><div><h3>Prix de freelance, qualité d'agence</h3><p>Aucun intermédiaire entre votre besoin et le résultat. Le budget va dans le développement, pas dans la structure.</p></div></div>
+        <div class="wi rv"><div class="wi-num">04</div><div><h3>Zéro template générique</h3><p>Pas de thème acheté, pas de structure copiée-collée. Chaque site est façonné autour de votre identité, vos contenus, vos objectifs.</p></div></div>
       </div>
     </div>
   </div>
@@ -934,6 +978,12 @@ body::after {
         <div class="cc">jusqu'à 18 000€</div>
         <div class="cc">4 360–8 360€</div>
         <div class="cc jc good">1 200–2 500€</div>
+
+        <div class="cr">Délai de livraison</div>
+        <div class="cc">4–8 semaines</div>
+        <div class="cc">2–4 semaines</div>
+        <div class="cc">6–10 semaines</div>
+        <div class="cc jc good">5–10 jours</div>
 
         <div class="cr">Vous possédez le site</div>
         <div class="cc good">✓</div>
@@ -1042,11 +1092,11 @@ body::after {
         <div class="inclus-icon">🎨</div>
         <h3>Design & Expérience</h3>
         <ul>
+          <li>Design 100% personnalisé</li>
+          <li>Logo animé SVG sur mesure</li>
           <li>Animations GSAP au scroll</li>
-          <li>Design 100% sur mesure</li>
-          <li>Typographies & couleurs de votre marque</li>
-          <li>Formulaire de contact intégré</li>
           <li>Galerie photos optimisée</li>
+          <li>Formulaire de contact intégré</li>
         </ul>
       </div>
 
@@ -1058,7 +1108,7 @@ body::after {
           <li>Mise en ligne en moins d'une heure</li>
           <li>Livraison en 5–10 jours</li>
           <li>100% déductible fiscalement</li>
-          <li>Formation à la prise en main</li>
+          <li>Support 7 jours post-lancement inclus</li>
         </ul>
       </div>
 
@@ -1073,54 +1123,43 @@ body::after {
     <div class="tarifs-tag rv">Tarifs</div>
     <h2 class="tarifs-h rv">Des prix <em>honnêtes</em></h2>
     <p class="tarifs-sub rv">One-shot · Hébergement gratuit · 100% déductible</p>
-    <div class="tgrid">
+    <div class="tgrid tgrid-2">
       <div class="tc">
-        <div class="tc-tag">Site vitrine</div>
-        <div class="tc-name">Essentiel</div>
-        <div class="tc-price"><sup>€</sup>1 200</div>
-        <div class="tc-period">one-shot · hébergement gratuit</div>
+        <div class="tc-tag">Site vitrine premium</div>
+        <div class="tc-name">Sur mesure</div>
+        <div class="tc-price"><sup>€</sup>1 200<span class="tc-price-sep">–</span>2 500</div>
+        <div class="tc-period">one-shot · hébergement gratuit · selon complexité</div>
         <div class="tc-sep"></div>
         <div class="tc-feats">
-          <div class="tf">Site vitrine 1 page</div>
-          <div class="tf">5–6 sections sur mesure</div>
+          <div class="tf">Site vitrine, 1 ou plusieurs pages</div>
           <div class="tf">Design 100% personnalisé</div>
+          <div class="tf">Logo animé SVG sur mesure</div>
           <div class="tf">Animations GSAP au scroll</div>
+          <div class="tf">Effets visuels avancés (Three.js, Canvas…)</div>
+          <div class="tf">Fond vidéo cinématique avec transitions fluides</div>
+          <div class="tf">Curseur premium & transitions de page</div>
           <div class="tf">Formulaire de contact</div>
-          <div class="tf">SEO intégré</div>
+          <div class="tf">SEO intégré — visible sur Google dès le lancement</div>
           <div class="tf">Mobile responsive</div>
+          <div class="tf">Intégration réservations / paiements</div>
           <div class="tf">Mise en ligne incluse</div>
         </div>
+        <p class="tc-note">Le tarif final dépend de la complexité du projet — défini ensemble lors de l'audit gratuit.</p>
         <a href="#cta" class="tc-cta">Démarrer →</a>
       </div>
-      <div class="tc" style="transition-delay:.1s">
-        <div class="tc-tag">Site premium</div>
-        <div class="tc-name">Premium</div>
-        <div class="tc-price"><sup>€</sup>2 500</div>
-        <div class="tc-period">one-shot · hébergement gratuit</div>
+      <div class="tc best" style="transition-delay:.1s">
+        <div class="tc-tag">Automation</div>
+        <div class="tc-name">Sur mesure</div>
+        <div class="tc-price"><span class="tc-price-plus">+</span><sup>€</sup>800<span class="tc-price-sep">–</span>1 200</div>
+        <div class="tc-period">en plus du site · retainer optionnel</div>
         <div class="tc-sep"></div>
         <div class="tc-feats">
-          <div class="tf">Tout de l'Essentiel</div>
-          <div class="tf">Pages multiples</div>
-          <div class="tf">Effets visuels avancés (Three.js, Canvas…)</div>
-          <div class="tf">Curseur premium</div>
-          <div class="tf">Transitions de page</div>
-          <div class="tf">Intégration réservations / paiements</div>
-        </div>
-        <a href="#cta" class="tc-cta">Démarrer →</a>
-      </div>
-      <div class="tc best" style="transition-delay:.2s">
-        <div class="tc-tag">Site + Automation</div>
-        <div class="tc-name">Complet</div>
-        <div class="tc-price"><sup>€</sup>3 500</div>
-        <div class="tc-period">one-shot · retainer optionnel</div>
-        <div class="tc-sep"></div>
-        <div class="tc-feats">
-          <div class="tf">Tout du Premium</div>
           <div class="tf">Plusieurs automatisations</div>
           <div class="tf">Emails / notifications automatiques</div>
           <div class="tf">Dashboard de suivi en temps réel</div>
           <div class="tf">Suivi & support 3 mois</div>
         </div>
+        <p class="tc-note">Ajouté à votre site sur mesure (1 200–2 500€) — total selon vos automatisations.</p>
         <a href="#cta" class="tc-cta">Démarrer →</a>
       </div>
     </div>
@@ -1160,9 +1199,8 @@ body::after {
               <svg class="sf-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <div class="sf-dropdown">
-              <div class="sf-option" data-value="1 200 – 2 000€ (Essentiel)">1 200 – 2 000€ &nbsp;·&nbsp; Essentiel</div>
-              <div class="sf-option" data-value="2 000 – 2 500€ (Premium)">2 000 – 2 500€ &nbsp;·&nbsp; Premium</div>
-              <div class="sf-option" data-value="3 000 – 3 500€ (Complet + Automation)">3 000 – 3 500€ &nbsp;·&nbsp; Complet + Automation</div>
+              <div class="sf-option" data-value="1 200 – 2 500€ (Sur mesure)">1 200 – 2 500€ &nbsp;·&nbsp; Sur mesure</div>
+              <div class="sf-option" data-value="2 000 – 3 700€ (Complet + Automation)">2 000 – 3 700€ &nbsp;·&nbsp; Complet + Automation</div>
               <div class="sf-option" data-value="À définir ensemble">À définir ensemble</div>
             </div>
             <input type="hidden" name="budget" value="">
