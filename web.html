@@ -317,33 +317,27 @@ nav ul a:hover{color:var(--white);}
 
 /* ── HERO ── */
 #hero{height:100vh;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
-@media(max-width:900px){#hero{height:100svh;}}
 /* ── VIDEO BG VIMEO ── */
 #hero-video-container {
   position: absolute; inset: 0;
   z-index: 2;
   overflow: hidden;
   will-change: opacity;
-  transform: translateZ(0);
+  transform: translateZ(0); /* force GPU layer */
 }
 .hero-vimeo-layer {
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0); /* GPU compositing */
   width: 177.78vh;
   height: 100vh;
   min-width: 100%;
   min-height: 56.25vw;
   pointer-events: none;
   will-change: opacity;
+  /* Transition opacity seulement — le blur est coûteux sur GPU */
   transition: opacity 1.8s ease;
   backface-visibility: hidden;
-}
-@media(max-width:900px) {
-  .hero-vimeo-layer {
-    width: 177.78svh;
-    height: 100svh;
-  }
 }
 #hero-vimeo-a { opacity: 1; }
 #hero-vimeo-b { opacity: 0; }
@@ -1616,25 +1610,10 @@ if (mobileMenu) {
 <script>
 (function() {
   const TRIGGER_AT = 3;
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
   const container = document.getElementById('hero-video-container');
   container.style.opacity = '0';
   container.style.transition = 'opacity 1.4s ease';
-
-  // Fix Safari iOS — capture la hauteur réelle au chargement et la fige
-  // avant que le premier scroll ne masque la barre d'adresse et recalcule vh
-  if (isMobile) {
-    const fixHeight = function() {
-      const h = window.innerHeight;
-      document.querySelectorAll('.hero-vimeo-layer').forEach(el => {
-        el.style.height = h + 'px';
-      });
-    };
-    fixHeight();
-    // Une seule exécution au load — ensuite on ne retouche plus la hauteur
-    window.addEventListener('load', fixHeight, { once: true });
-  }
 
   const script = document.createElement('script');
   script.src = 'https://player.vimeo.com/api/player.js';
@@ -1646,56 +1625,33 @@ if (mobileMenu) {
 
     let crossfading = false;
 
-    // Fade-in dès que A joue
     const check = setInterval(() => {
       playerA.getPaused().then(paused => {
         if (!paused) { container.style.opacity = '1'; clearInterval(check); }
       });
     }, 200);
 
-    function doCrossfadeToB() {
-      if (crossfading) return;
-      crossfading = true;
-      playerB.play().then(() => {
-        iframeB.style.opacity = '1';
-        iframeA.style.opacity = '0';
-        setTimeout(() => { playerA.pause(); }, 2000);
-      });
-    }
-
-    function doCrossfadeToA() {
-      if (!crossfading) return;
-      crossfading = false;
-      playerA.setCurrentTime(0).then(() => playerA.play()).then(() => {
-        iframeA.style.opacity = '1';
-        iframeB.style.opacity = '0';
-        setTimeout(() => { playerB.pause(); }, 2000);
-      });
-    }
-
-    // Sur mobile — setInterval polling car timeupdate peu fiable sur Safari iOS
-    if (isMobile) {
-      setInterval(() => {
-        playerA.getCurrentTime().then(t => {
-          playerA.getDuration().then(d => {
-            if (d && (d - t) <= TRIGGER_AT) doCrossfadeToB();
-          });
+    playerA.on('timeupdate', function(data) {
+      if (!crossfading && data.duration && (data.duration - data.seconds) <= TRIGGER_AT) {
+        crossfading = true;
+        playerB.play().then(() => {
+          iframeB.style.opacity = '1';
+          iframeA.style.opacity = '0';
+          setTimeout(() => { playerA.pause(); }, 2000);
         });
-        playerB.getCurrentTime().then(t => {
-          playerB.getDuration().then(d => {
-            if (d && (d - t) <= TRIGGER_AT) doCrossfadeToA();
-          });
+      }
+    });
+
+    playerB.on('timeupdate', function(data) {
+      if (crossfading && data.duration && (data.duration - data.seconds) <= TRIGGER_AT) {
+        crossfading = false;
+        playerA.setCurrentTime(0).then(() => playerA.play()).then(() => {
+          iframeA.style.opacity = '1';
+          iframeB.style.opacity = '0';
+          setTimeout(() => { playerB.pause(); }, 2000);
         });
-      }, 1000);
-    } else {
-      // Desktop — timeupdate natif plus précis
-      playerA.on('timeupdate', function(data) {
-        if (data.duration && (data.duration - data.seconds) <= TRIGGER_AT) doCrossfadeToB();
-      });
-      playerB.on('timeupdate', function(data) {
-        if (data.duration && (data.duration - data.seconds) <= TRIGGER_AT) doCrossfadeToA();
-      });
-    }
+      }
+    });
   };
   document.head.appendChild(script);
 })();
