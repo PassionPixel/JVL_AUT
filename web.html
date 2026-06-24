@@ -1622,6 +1622,20 @@ if (mobileMenu) {
   container.style.opacity = '0';
   container.style.transition = 'opacity 1.4s ease';
 
+  // Fix Safari iOS — capture la hauteur réelle au chargement et la fige
+  // avant que le premier scroll ne masque la barre d'adresse et recalcule vh
+  if (isMobile) {
+    const fixHeight = function() {
+      const h = window.innerHeight;
+      document.querySelectorAll('.hero-vimeo-layer').forEach(el => {
+        el.style.height = h + 'px';
+      });
+    };
+    fixHeight();
+    // Une seule exécution au load — ensuite on ne retouche plus la hauteur
+    window.addEventListener('load', fixHeight, { once: true });
+  }
+
   const script = document.createElement('script');
   script.src = 'https://player.vimeo.com/api/player.js';
   script.onload = function() {
