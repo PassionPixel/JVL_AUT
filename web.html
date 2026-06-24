@@ -317,6 +317,7 @@ nav ul a:hover{color:var(--white);}
 
 /* ── HERO ── */
 #hero{height:100vh;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+@media(max-width:900px){#hero{height:100svh;}}
 /* ── VIDEO BG VIMEO ── */
 #hero-video-container {
   position: absolute; inset: 0;
@@ -338,13 +339,10 @@ nav ul a:hover{color:var(--white);}
   transition: opacity 1.8s ease;
   backface-visibility: hidden;
 }
-/* Mobile — position fixed pour éviter le recalcul de Safari au scroll */
 @media(max-width:900px) {
-  #hero-video-container { position: fixed; }
   .hero-vimeo-layer {
+    width: 177.78svh;
     height: 100svh;
-    top: 0;
-    transform: translate3d(-50%, 0, 0);
   }
 }
 #hero-vimeo-a { opacity: 1; }
