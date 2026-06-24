@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>html,body{background:#050505;}</style>
+<!-- Preconnect pour chargement plus rapide -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://player.vimeo.com">
+<link rel="preconnect" href="https://f.vimeocdn.com">
+<link rel="dns-prefetch" href="https://vimeocdn.com">
 <title>JVL — Sites Web Premium</title>
 <meta name="description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Livraison 5–10 jours, dès 1 200€.">
 <link rel="canonical" href="https://www.jvlautomation.com/web.html">
@@ -310,12 +317,36 @@ nav ul a:hover{color:var(--white);}
 
 /* ── HERO ── */
 #hero{height:100vh;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+/* ── VIDEO BG VIMEO ── */
+#hero-video-container {
+  position: absolute; inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  will-change: opacity;
+  transform: translateZ(0); /* force GPU layer */
+}
+.hero-vimeo-layer {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate3d(-50%, -50%, 0); /* GPU compositing */
+  width: 177.78vh;
+  height: 100vh;
+  min-width: 100%;
+  min-height: 56.25vw;
+  pointer-events: none;
+  will-change: opacity;
+  /* Transition opacity seulement — le blur est coûteux sur GPU */
+  transition: opacity 1.8s ease;
+  backface-visibility: hidden;
+}
+#hero-vimeo-a { opacity: 1; }
+#hero-vimeo-b { opacity: 0; }
 .hero-bg{
   position:absolute;inset:0;
+  z-index:3;
+  pointer-events:none;
   background:
-    radial-gradient(ellipse 70% 60% at 75% 25%, rgba(14,165,233,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 20% 75%, rgba(255,255,255,0.02) 0%, transparent 50%),
-    var(--black);
+    linear-gradient(180deg, rgba(5,5,5,0.1) 0%, transparent 30%, transparent 60%, rgba(5,5,5,0.6) 100%);
 }
 /* Grain cinématique */
 .hero-grain{
@@ -376,7 +407,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 @media(max-width:900px){.bridge-inner{padding:80px 24px;}}
 
 /* ── POURQUOI ── */
-#why{background:var(--black);}
+#why{background:var(--black);contain:layout style;}
 .why-inner{
   display:grid;grid-template-columns:380px 1fr;
   gap:120px;align-items:start;
@@ -398,7 +429,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 @media(max-width:900px){.why-inner{grid-template-columns:1fr;gap:48px;}}
 
 /* ── PROCESS ── */
-#process{background:var(--black2);}
+#process{background:var(--black2);contain:layout style;}
 .process-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:20px;}
 .process-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,4vw,56px);color:var(--white);line-height:1;margin-bottom:72px;}
 .process-h em{font-style:italic;color:var(--chrome);}
@@ -416,7 +447,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 @media(max-width:900px){.process-steps{grid-template-columns:1fr 1fr;}.ps{padding:32px 20px;}}
 
 /* ── COMPARATIF ── */
-#comparatif{background:var(--black);}
+#comparatif{background:var(--black);contain:layout style;}
 .comp-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:20px;text-align:center;}
 .comp-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(32px,4vw,56px);text-align:center;color:var(--white);margin-bottom:12px;}
 .comp-h em{font-style:italic;color:var(--chrome);}
@@ -468,7 +499,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 .inclus-card ul li{font-size:.875rem;color:rgba(255,255,255,.55);padding-left:18px;position:relative;line-height:1.5;}
 .inclus-card ul li::before{content:"✓";position:absolute;left:0;color:var(--blue);font-weight:700;font-size:.75rem;}
 
-#tarifs{background:var(--black2);}
+#tarifs{background:var(--black2);contain:layout style;}
 .tarifs-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:20px;text-align:center;}
 .tarifs-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,4vw,56px);text-align:center;color:var(--white);margin-bottom:12px;}
 .tarifs-h em{font-style:italic;color:var(--chrome);}
@@ -528,19 +559,18 @@ h1 em{font-style:italic;color:var(--chrome);}
   margin-bottom: 24px;
 }
 .aw-title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  font-size: clamp(26px, 3vw, 40px);
-  line-height: 1.15;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.1;
   color: var(--white);
   margin-bottom: 36px;
 }
 .aw-title em {
-  font-style: normal;
-  background: linear-gradient(135deg, var(--blue), var(--blue2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-style: italic;
+  color: var(--blue2);
+  background: none;
+  -webkit-text-fill-color: var(--blue2);
 }
 .aw-body { display: flex; flex-direction: column; gap: 18px; }
 .aw-body p { font-size: 15px; color: var(--white50); line-height: 1.8; }
@@ -560,6 +590,11 @@ h1 em{font-style:italic;color:var(--chrome);}
   display: flex;
   flex-direction: column;
   gap: 24px;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.aw-distinction-inner:hover {
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: 0 0 24px rgba(255,255,255,0.06), 0 0 60px rgba(255,255,255,0.03);
 }
 .aw-dist-label {
   font-family: 'Montserrat', sans-serif;
@@ -743,15 +778,7 @@ body::after {
 }
 
 /* ── LUMIÈRE DIFFUSE hero ── */
-.hero-glow {
-  position:absolute;
-  width:600px;height:600px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 70%);
-  top:-100px;right:-100px;
-  animation:glowPulse 6s ease-in-out infinite;
-  pointer-events:none;
-}
+.hero-glow { display: none; }
 @keyframes glowPulse {
   0%,100%{opacity:.6;transform:scale(1);}
   50%{opacity:1;transform:scale(1.15);}
@@ -960,6 +987,20 @@ body::after {
 
 <!-- HERO -->
 <section id="hero">
+  <div id="hero-video-container">
+    <iframe id="hero-vimeo-a" class="hero-vimeo-layer"
+      src="https://player.vimeo.com/video/1199772044?background=1&autoplay=1&loop=0&muted=1&badge=0&autopause=0&app_id=58479"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+    <iframe id="hero-vimeo-b" class="hero-vimeo-layer"
+      src="https://player.vimeo.com/video/1199779459?background=1&autoplay=0&loop=0&muted=1&badge=0&autopause=0&app_id=58479"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+  </div>
   <div class="hero-bg"></div>
   <div class="hero-glow"></div>
   <div class="hero-grain"></div>
@@ -1003,8 +1044,8 @@ body::after {
         <p class="why-left">Les CMS (WordPress, Wix…) sont partout. Les templates aussi. Ce qui est rare — c'est du code sur mesure avec ce niveau de détail, à un prix de freelance.</p>
       </div>
       <div class="why-items">
-        <div class="wi rv"><div class="wi-num">01</div><div><h3>Technologie premium sur mesure</h3><p>Three.js, GSAP, Canvas 2D, transitions de page, curseur avancé — intégrés nativement, sans plugin, sans conflit.</p></div></div>
-        <div class="wi rv"><div class="wi-num">02</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site. Un site statique charge 3x plus vite qu'un WordPress — Google vous récompense.</p></div></div>
+        <div class="wi rv"><div class="wi-num">01</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site. Un site statique charge 3x plus vite qu'un WordPress — Google vous récompense.</p></div></div>
+        <div class="wi rv"><div class="wi-num">02</div><div><h3>Technologie premium sur mesure</h3><p>Three.js, GSAP, Canvas 2D, transitions de page, curseur avancé — intégrés nativement, sans plugin, sans conflit.</p></div></div>
         <div class="wi rv"><div class="wi-num">03</div><div><h3>Prix de freelance, qualité d'agence</h3><p>Aucun intermédiaire entre votre besoin et le résultat. Le budget va dans le développement, pas dans la structure.</p></div></div>
         <div class="wi rv"><div class="wi-num">04</div><div><h3>Zéro template générique</h3><p>Pas de thème acheté, pas de structure copiée-collée. Chaque site est façonné autour de votre identité, vos contenus, vos objectifs.</p></div></div>
       </div>
@@ -1303,7 +1344,7 @@ body::after {
     <p class="cta-p rv">Un échange de 30 minutes suffit. Devis gratuit sous 48h. Pas d'engagement.</p>
 
     <!-- À propos — version courte -->
-    <p class="cta-about rv">Je ne suis pas une agence. Je suis un développeur indépendant qui traite votre projet avec la rigueur de quelqu'un qui vient d'un monde où l'approximation n'existe pas. <a href="index.html#about" class="cta-about-link">En savoir plus →</a></p>
+
 
     <!-- FORMULAIRE -->
     <form action="https://formspree.io/f/xojbwanw" method="POST" class="sites-form rv" id="sitesForm">
@@ -1364,6 +1405,13 @@ body::after {
 
 <script>
 gsap.registerPlugin(ScrollTrigger);
+
+// Optimisation ScrollTrigger — réduit les calculs inutiles
+ScrollTrigger.config({
+  limitCallbacks: true,
+  syncInterval: 40,
+});
+ScrollTrigger.defaults({ lazy: true });
 
 // CURSOR — slow, premium
 const cur = document.getElementById('cur');
@@ -1557,5 +1605,57 @@ if (mobileMenu) {
 })();
 
 </script>
+
+<!-- ── VIMEO DUAL VIDEO CROSSFADE ── -->
+<script>
+(function() {
+  const TRIGGER_AT = 3;
+
+  const container = document.getElementById('hero-video-container');
+  container.style.opacity = '0';
+  container.style.transition = 'opacity 1.4s ease';
+
+  const script = document.createElement('script');
+  script.src = 'https://player.vimeo.com/api/player.js';
+  script.onload = function() {
+    const iframeA = document.getElementById('hero-vimeo-a');
+    const iframeB = document.getElementById('hero-vimeo-b');
+    const playerA = new Vimeo.Player(iframeA);
+    const playerB = new Vimeo.Player(iframeB);
+
+    let crossfading = false;
+
+    const check = setInterval(() => {
+      playerA.getPaused().then(paused => {
+        if (!paused) { container.style.opacity = '1'; clearInterval(check); }
+      });
+    }, 200);
+
+    playerA.on('timeupdate', function(data) {
+      if (!crossfading && data.duration && (data.duration - data.seconds) <= TRIGGER_AT) {
+        crossfading = true;
+        playerB.play().then(() => {
+          iframeB.style.opacity = '1';
+          iframeA.style.opacity = '0';
+          setTimeout(() => { playerA.pause(); }, 2000);
+        });
+      }
+    });
+
+    playerB.on('timeupdate', function(data) {
+      if (crossfading && data.duration && (data.duration - data.seconds) <= TRIGGER_AT) {
+        crossfading = false;
+        playerA.setCurrentTime(0).then(() => playerA.play()).then(() => {
+          iframeA.style.opacity = '1';
+          iframeB.style.opacity = '0';
+          setTimeout(() => { playerB.pause(); }, 2000);
+        });
+      }
+    });
+  };
+  document.head.appendChild(script);
+})();
+</script>
+
 </body>
 </html>
