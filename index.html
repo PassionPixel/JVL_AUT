@@ -76,7 +76,6 @@ nav.scrolled {
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(14,165,233,0.1);
 }
-}
 .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .logo-mark {
   width: 42px; height: 42px;
@@ -3802,6 +3801,21 @@ function playLogoAnimation(prefix) {
   const dc = document.getElementById(prefix+'-dot-circle');
   const dr = document.getElementById(prefix+'-dot-ring');
   if (!dc || !dr) return;
+
+  // Tue toutes les animations en cours sur les éléments du logo
+  // avant de démarrer une nouvelle timeline — évite le bug de double-clic
+  const allTargets = [
+    ...nodeData.map(n => n.id),
+    ...lines,
+    '#'+prefix+'-ncenter',
+    '#'+prefix+'-mark-svg',
+    '#'+prefix+'-t-jvl',
+    '#'+prefix+'-t-auto',
+    '#'+prefix+'-t-sub',
+    '#'+prefix+'-dot-circle',
+    '#'+prefix+'-dot-ring',
+  ];
+  gsap.killTweensOf(allTargets);
 
   dc.classList.remove('breathing');
   dr.classList.remove('breathing');
