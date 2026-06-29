@@ -95,17 +95,19 @@ nav ul a:hover::after { transform:scaleX(1);transform-origin:left; }
 }
 .nav-cta::after { display:none !important; }
 .nav-cta:hover { background:var(--gold) !important;color:var(--dark) !important; }
-@media(max-width:900px){nav{padding:16px 24px;} nav ul{display:none;}}
+@media(max-width:900px){
+  nav { padding:20px 24px; }
+  nav ul { display:none; }
+}
 
 .hamburger-d { display:none; }
 .nav-overlay { display:none; }
+
 @media(max-width:900px){
-  .hamburger-d { display:flex; }
+  .hamburger-d { display:flex;position:fixed;top:20px;right:24px;z-index:501; }
   .nav-overlay { display:flex; }
-  nav ul { display:none; }
-  nav { justify-content:center;position:relative; }
-  .logo { position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap; }
-  .hamburger-d { position:absolute;right:24px;top:50%;transform:translateY(-50%); }
+  nav { justify-content:center; }
+  .logo { white-space:nowrap; }
 
   /* Menu overlay */
   .nav-overlay {
