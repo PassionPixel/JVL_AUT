@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://player.vimeo.com">
 <link rel="preconnect" href="https://f.vimeocdn.com">
 <link rel="dns-prefetch" href="https://vimeocdn.com">
+<link rel="dns-prefetch" href="https://f.vimeocdn.com">
+<link rel="dns-prefetch" href="https://fresnel.vimeocdn.com">
 <title>JVL — Sites Web Premium</title>
 <meta name="description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Livraison 5–10 jours, dès 1 200€.">
 <link rel="canonical" href="https://www.jvlautomation.com/web.html">
@@ -85,7 +87,7 @@ body *{cursor:none !important;}
   mix-blend-mode:difference;
   transition:width .4s cubic-bezier(.16,1,.3,1),height .4s cubic-bezier(.16,1,.3,1);
 }
-#cur.big{width:60px;height:60px;}
+#cur.big{width:30px;height:30px;}
 @media(max-width:900px){#cur{display:none;}}
 
 /* ── SECTION INNER — centré comme index ── */
@@ -467,6 +469,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 .badge.bas{background:var(--white06);color:var(--white70);}
 .badge.av{background:rgba(14,165,233,0.08);color:var(--blue2);}
 .badge.pr{background:rgba(14,165,233,0.18);color:var(--blue2);font-weight:700;}
+.badge.pr-green{background:rgba(34,197,94,0.15);color:#4ade80;font-weight:700;}
 .stars-g{color:rgba(255,255,255,0.35);font-size:13px;}
 .stars-b{color:var(--blue2);font-size:13px;}
 .stars-w{color:var(--white70);font-size:13px;}
@@ -491,8 +494,8 @@ h1 em{font-style:italic;color:var(--chrome);}
 .inclus-title em{font-style:italic;color:var(--blue);}
 .inclus-sub{color:rgba(255,255,255,.5);font-size:1.05rem;max-width:560px;margin-bottom:64px;}
 .inclus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
-.inclus-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:32px 28px;transition:border-color .3s,transform .3s;}
-.inclus-card:hover{border-color:rgba(14,165,233,.3);transform:translateY(-4px);}
+.inclus-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:32px 28px;transition:border-color .3s;position:relative;overflow:hidden;isolation:isolate;}
+.inclus-card:hover{border-color:rgba(14,165,233,.3);}
 .inclus-icon{font-size:2rem;margin-bottom:16px;}
 .inclus-card h3{font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:16px;}
 .inclus-card ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
@@ -509,8 +512,10 @@ h1 em{font-style:italic;color:var(--chrome);}
 .tc-price-sep{font-size:0.5em;opacity:0.4;margin:0 4px;}
 .tc-price-plus{font-size:0.6em;opacity:0.6;margin-right:2px;}
 .tc-note{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;margin-top:16px;font-style:italic;}
-.tc{background:var(--black2);padding:48px 40px;position:relative;border:1px solid rgba(255,255,255,0.08);border-radius:8px;transition:border-color .3s,transform .3s;display:flex;flex-direction:column;isolation:isolate;}
-.tc:hover{border-color:rgba(255,255,255,0.4);transform:translateY(-6px);}
+.tc{background:var(--black2);padding:48px 40px;position:relative;border:1px solid rgba(255,255,255,0.08);border-radius:8px;transition:border-color .3s;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;}
+.tc:hover{border-color:rgba(255,255,255,0.4);}
+.tc::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,0.12),transparent 70%);transform:translate(-50%,-50%);top:var(--my,50%);left:var(--mx,50%);opacity:0;transition:opacity .2s;pointer-events:none;z-index:0;}
+.tc:hover::before{opacity:1;}
 
 .tc.best{
   border: 1px solid rgba(14,165,233,0.4) !important;
@@ -995,7 +1000,7 @@ body::after {
       referrerpolicy="strict-origin-when-cross-origin">
     </iframe>
     <iframe id="hero-vimeo-b" class="hero-vimeo-layer"
-      src="https://player.vimeo.com/video/1199779459?background=1&autoplay=0&loop=0&muted=1&badge=0&autopause=0&app_id=58479"
+      data-src="https://player.vimeo.com/video/1199779459?background=1&autoplay=0&loop=0&muted=1&badge=0&autopause=0&app_id=58479"
       frameborder="0"
       allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
       referrerpolicy="strict-origin-when-cross-origin">
@@ -1038,16 +1043,16 @@ body::after {
 <section id="why">
   <div class="si">
     <div class="why-inner">
-      <div class="rv-l">
+      <div id="why-left-block">
         <div class="why-left-tag">Pourquoi JVL</div>
         <h2 class="why-left">Ce que les agences<br><em>ne peuvent pas</em><br>vous offrir</h2>
         <p class="why-left">Les CMS (WordPress, Wix…) sont partout. Les templates aussi. Ce qui est rare — c'est du code sur mesure avec ce niveau de détail, à un prix de freelance.</p>
       </div>
       <div class="why-items">
-        <div class="wi rv"><div class="wi-num">01</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site. Un site statique charge 3x plus vite qu'un WordPress — Google vous récompense.</p></div></div>
-        <div class="wi rv"><div class="wi-num">02</div><div><h3>Technologie premium sur mesure</h3><p>Three.js, GSAP, Canvas 2D, transitions de page, curseur avancé — intégrés nativement, sans plugin, sans conflit.</p></div></div>
-        <div class="wi rv"><div class="wi-num">03</div><div><h3>Prix de freelance, qualité d'agence</h3><p>Aucun intermédiaire entre votre besoin et le résultat. Le budget va dans le développement, pas dans la structure.</p></div></div>
-        <div class="wi rv"><div class="wi-num">04</div><div><h3>Zéro template générique</h3><p>Pas de thème acheté, pas de structure copiée-collée. Chaque site est façonné autour de votre identité, vos contenus, vos objectifs.</p></div></div>
+        <div class="wi why-card"><div class="wi-num">01</div><div><h3>Plus sécurisé, plus propre et plus rapide qu'un CMS</h3><p>Leurs nombreux plugins augmentent les failles et ralentissent fortement le site. Un site statique charge 3x plus vite qu'un WordPress — Google vous récompense.</p></div></div>
+        <div class="wi why-card"><div class="wi-num">02</div><div><h3>Technologie premium sur mesure</h3><p>Three.js, GSAP, Canvas 2D, transitions de page, curseur avancé — intégrés nativement, sans plugin, sans conflit.</p></div></div>
+        <div class="wi why-card"><div class="wi-num">03</div><div><h3>Prix de freelance, qualité d'agence</h3><p>Aucun intermédiaire entre votre besoin et le résultat. Le budget va dans le développement, pas dans la structure.</p></div></div>
+        <div class="wi why-card"><div class="wi-num">04</div><div><h3>Zéro template générique</h3><p>Pas de thème acheté, pas de structure copiée-collée. Chaque site est façonné autour de votre identité, vos contenus, vos objectifs.</p></div></div>
       </div>
     </div>
   </div>
@@ -1059,10 +1064,10 @@ body::after {
     <div class="process-tag rv">Comment ça marche</div>
     <h2 class="process-h rv">De l'idée au <em>lancement</em></h2>
     <div class="process-steps">
-      <div class="ps rv"><div class="ps-num">01</div><h3>Découverte</h3><p>30 minutes pour comprendre votre secteur, vos clients, votre identité. Nous définissons la direction créative.</p></div>
-      <div class="ps rv" style="transition-delay:.08s"><div class="ps-num">02</div><h3>Design</h3><p>Je crée votre site sur mesure — couleurs, typographie, animations. Vous voyez le résultat avant de valider.</p></div>
-      <div class="ps rv" style="transition-delay:.16s"><div class="ps-num">03</div><h3>Révisions</h3><p>Vous demandez les ajustements. Je modifie jusqu'à ce que ce soit parfait — photos, textes, couleurs, effets.</p></div>
-      <div class="ps rv" style="transition-delay:.24s"><div class="ps-num">04</div><h3>Lancement</h3><p>Mise en ligne sur votre domaine en moins d'une heure. Hébergement gratuit. Vous êtes en ligne.</p></div>
+      <div class="ps"><div class="ps-num">01</div><h3>Découverte</h3><p>30 minutes pour comprendre votre secteur, vos clients, votre identité. Nous définissons la direction créative.</p></div>
+      <div class="ps"><div class="ps-num">02</div><h3>Design</h3><p>Je crée votre site sur mesure — couleurs, typographie, animations. Vous voyez le résultat avant de valider.</p></div>
+      <div class="ps"><div class="ps-num">03</div><h3>Révisions</h3><p>Vous demandez les ajustements. Je modifie jusqu'à ce que ce soit parfait — photos, textes, couleurs, effets.</p></div>
+      <div class="ps"><div class="ps-num">04</div><h3>Lancement</h3><p>Mise en ligne sur votre domaine en moins d'une heure. Hébergement gratuit. Vous êtes en ligne.</p></div>
     </div>
   </div>
 </section>
@@ -1133,7 +1138,7 @@ body::after {
         <div class="cr">Niveau de design</div>
         <div class="cc"><span class="badge bas">Basique</span></div>
         <div class="cc"><span class="badge bas">Basique</span></div>
-        <div class="cc"><span class="badge pr">Premium</span></div>
+        <div class="cc"><span class="badge pr-green">Premium</span></div>
         <div class="cc jc"><span class="badge pr">Premium</span></div>
 
         <div class="cr">100% déductible</div>
@@ -1153,7 +1158,7 @@ body::after {
     <h2 class="inclus-title rv">Chaque site JVL livré <em>clé en main</em></h2>
     <p class="inclus-sub rv">Pas de plugin à configurer. Pas de surprise après livraison. Tout est intégré dès le départ.</p>
 
-    <div class="inclus-grid rv">
+    <div class="inclus-grid">
 
       <div class="inclus-card">
         <div class="inclus-icon">🔍</div>
@@ -1589,7 +1594,137 @@ if (mobileMenu) {
   });
 }
 
-// ── TABLEAU COMPARATIF MOBILE ──
+// ── TARIF CARDS — depuis leurs côtés ──
+(function(){
+  if(typeof gsap === 'undefined') return;
+  const tcards = document.querySelectorAll('.tc');
+  if(!tcards.length) return;
+
+  tcards.forEach((card, i) => {
+    gsap.set(card, { opacity:0, x: i === 0 ? -80 : 80 });
+  });
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obs.unobserve(entry.target);
+
+    tcards.forEach((card, i) => {
+      card.style.transition = 'border-color .3s, transform .3s, overflow hidden';
+      gsap.to(card, {
+        opacity:1, x:0,
+        duration:1,
+        ease:'sine.out',
+        delay: i * 0.15,
+        onComplete: () => { card.style.transition = ''; }
+      });
+    });
+  }, { threshold: 0.15 });
+  obs.observe(document.querySelector('.tgrid'));
+})();
+
+// ── MAGNETIC MOVE sur inclus-cards (suit la souris) ──
+document.querySelectorAll('.inclus-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const relX = e.clientX - r.left - r.width / 2;
+    const relY = e.clientY - r.top - r.height / 2;
+    gsap.to(card, { x: relX * 0.08, y: relY * 0.08, duration: 0.3, ease: 'power2.out' });
+  });
+  card.addEventListener('mouseleave', () => {
+    gsap.to(card, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+  });
+});
+
+// ── TC hover géré par GSAP uniquement ──
+document.querySelectorAll('.tc').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    gsap.to(card, { y: -6, duration: 0.3, ease: 'power2.out' });
+  });
+  card.addEventListener('mouseleave', () => {
+    gsap.to(card, { y: 0, duration: 0.4, ease: 'elastic.out(1, 0.4)' });
+  });
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
+(function(){
+  if(typeof gsap === 'undefined') return;
+  const leftBlock = document.getElementById('why-left-block');
+  const cards = document.querySelectorAll('.why-card');
+  if(!leftBlock || !cards.length) return;
+
+  gsap.set(leftBlock, { opacity:0, x:-60 });
+  gsap.set(cards, { opacity:0, x:80 });
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obs.unobserve(entry.target);
+
+    // Texte gauche
+    gsap.to(leftBlock, { opacity:1, x:0, duration:1, ease:'sine.out' });
+
+    // Cards depuis droite en séquence
+    cards.forEach(card => card.style.transition = 'none');
+    cards.forEach((card, i) => {
+      gsap.to(card, {
+        opacity:1, x:0,
+        duration:1,
+        ease:'sine.out',
+        delay: 0.15 + i * 0.12,
+        onComplete: () => { card.style.transition = ''; }
+      });
+    });
+
+  }, { threshold: 0.15 });
+  obs.observe(document.getElementById('why'));
+})();
+
+// ── INCLUS CARDS — animation GSAP premium ──
+(function(){
+  const cards = document.querySelectorAll('.inclus-card');
+  if(!cards.length || typeof gsap === 'undefined') return;
+
+  // Directions selon position dans la grille (3 colonnes x 2 rangées)
+  // Rangée 1: gauche, haut, droite — Rangée 2: gauche, bas, droite
+  const directions = [
+    { x:-60, y:0 },   // card 1 — depuis gauche
+    { x:0,  y:-60 },  // card 2 — depuis haut
+    { x:60, y:0 },    // card 3 — depuis droite
+    { x:-60, y:0 },   // card 4 — depuis gauche
+    { x:0,  y:60 },   // card 5 — depuis bas
+    { x:60, y:0 },    // card 6 — depuis droite
+  ];
+
+  cards.forEach((card, i) => {
+    const d = directions[i] || { x:0, y:40 };
+    gsap.set(card, { opacity:0, x:d.x, y:d.y });
+  });
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obs.unobserve(entry.target);
+
+    // Désactive la transition CSS qui interfère avec GSAP
+    cards.forEach(card => card.style.transition = 'none');
+
+    cards.forEach((card, i) => {
+      gsap.to(card, {
+        opacity:1, x:0, y:0,
+        duration:1.1,
+        ease:'sine.out',
+        delay: i * 0.1,
+        onComplete: () => {
+          // Rétablit la transition CSS pour le hover
+          card.style.transition = '';
+        }
+      });
+    });
+
+  }, { threshold: 0.1 });
+  obs.observe(document.querySelector('.inclus-grid'));
+})();
 (function() {
   if (window.innerWidth > 900) return; // desktop intact
   const ctg = document.querySelector('.ctg');
@@ -1602,6 +1737,76 @@ if (mobileMenu) {
       el.classList.add('col-hide-mobile');
     }
   });
+})();
+
+// ── PROCESS CARDS — animation GSAP premium ──
+(function(){
+  const steps = document.querySelectorAll('.ps');
+  if(!steps.length || typeof gsap === 'undefined') return;
+
+  gsap.set(steps, { opacity:0, y:60 });
+  gsap.set('.ps-num', { opacity:0, y:20 });
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obs.unobserve(entry.target);
+
+    gsap.to(steps, {
+      opacity:1, y:0,
+      duration:.8,
+      ease:'power3.out',
+      stagger:.18
+    });
+
+    gsap.to('.ps-num', {
+      opacity:1, y:0,
+      duration:.6,
+      ease:'power3.out',
+      stagger:.18,
+      delay:.2
+    });
+
+  }, { threshold: 0.2 });
+  obs.observe(document.querySelector('.process-steps'));
+})();
+(function(){
+  const ctg = document.querySelector('.ctg');
+  if(!ctg) return;
+  const COLS = 5;
+  const children = Array.from(ctg.children);
+  const rows = [];
+  for(let i = 0; i < children.length; i += COLS) {
+    rows.push(children.slice(i, i + COLS));
+  }
+
+  // Style initial — lignes invisibles, décalées vers le haut
+  rows.forEach(row => {
+    row.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-18px)';
+      el.style.transition = 'opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1)';
+    });
+  });
+
+  // Cellules colonne JVL (index 4)
+  const jvlCells = children.filter((_, i) => i % COLS === 4);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obs.unobserve(ctg);
+
+    // Lignes en cascade — 60ms entre chaque
+    rows.forEach((row, ri) => {
+      setTimeout(() => {
+        row.forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }, ri * 60);
+    });
+
+  }, { threshold: 0.1 });
+  obs.observe(ctg);
 })();
 
 </script>
@@ -1620,6 +1825,8 @@ if (mobileMenu) {
   script.onload = function() {
     const iframeA = document.getElementById('hero-vimeo-a');
     const iframeB = document.getElementById('hero-vimeo-b');
+  // Charge l'iframe B au dernier moment — pas au chargement initial de la page
+  if(iframeB && iframeB.dataset.src) iframeB.src = iframeB.dataset.src;
     const playerA = new Vimeo.Player(iframeA);
     const playerB = new Vimeo.Player(iframeB);
 
