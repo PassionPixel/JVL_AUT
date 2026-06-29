@@ -1216,7 +1216,7 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
     reveal(values, 1350);
     reveal(cta,    1500);
 
-  }, { threshold: 0.2 });
+  }, { threshold: 0, rootMargin: '0px 0px -20% 0px' });
   obs.observe(section);
 })();
 
