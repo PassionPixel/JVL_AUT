@@ -428,9 +428,9 @@ h1 em{font-style:italic;color:var(--chrome);}
 .wi:last-child{border-bottom:1px solid var(--border);}
 .wi:hover{padding-left:10px;}
 .wi-num{font-size:11px;color:rgba(14,165,233,0.6);font-weight:700;min-width:28px;padding-top:2px;letter-spacing:1px;}
-.wi h3{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;white-space:nowrap;}
+.wi h3{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;}
 .wi p{font-size:13px;color:var(--white70);line-height:1.7;font-weight:300;}
-@media(max-width:900px){.why-inner{grid-template-columns:1fr;gap:48px;}}
+@media(max-width:900px){.why-inner{grid-template-columns:1fr;gap:48px;}.wi h3{white-space:normal;font-size:14px;}}
 
 /* ── PROCESS ── */
 #process{background:var(--black2);contain:layout style;}
@@ -1412,8 +1412,6 @@ body::after {
 
 <script>
 // ── MOBILE VIEWPORT HEIGHT FIX ──
-// Fixe la hauteur du hero au chargement sur mobile
-// pour éviter le redimensionnement quand la barre du navigateur apparaît/disparaît
 (function(){
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   const hero = document.getElementById('hero');
@@ -1421,6 +1419,14 @@ body::after {
     const fixedH = document.documentElement.clientHeight;
     hero.style.height = fixedH + 'px';
     hero.style.minHeight = fixedH + 'px';
+    // Fix le container vidéo
+    const container = document.getElementById('hero-video-container');
+    if(container) container.style.height = fixedH + 'px';
+    // Fix les layers vimeo
+    document.querySelectorAll('.hero-vimeo-layer').forEach(el => {
+      el.style.height = fixedH + 'px';
+      el.style.width = (fixedH * 1.7778) + 'px';
+    });
   }
 })();
 
