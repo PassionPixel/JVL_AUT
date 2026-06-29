@@ -135,10 +135,10 @@ nav.scrolled ul a:hover { color:var(--green-mid); }
 /* ── HERO ── */
 #hero {
   height:100vh;min-height:650px;
-@supports (height: 100svh) { #hero { height:100svh; } }
   position:relative;overflow:hidden;
   display:flex;align-items:center;
 }
+@supports (height: 100svh) { #hero { height:100svh; } }
 /* ── SLIDESHOW HERO ── */
 .hero-slide {
   position:absolute;inset:0;
@@ -220,7 +220,7 @@ h1 em { font-style:italic;color:var(--cream); }
 
 /* Hero scroll indicator */
 .hero-scroll {
-  position:absolute;bottom:40px;left:64px;z-index:10;
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:10;
   display:flex;flex-direction:column;align-items:center;gap:10px;
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:rgba(250,250,246,.5);opacity:0;animation:fadeUp .8s 1.4s forwards;
@@ -240,7 +240,7 @@ h1 em { font-style:italic;color:var(--cream); }
 .hstat { text-align:center; }
 .hstat-val { font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;color:var(--green-deep);line-height:1; }
 .hstat-lbl { font-size:11px;color:var(--text-light);letter-spacing:1px;text-transform:uppercase;margin-top:4px; }
-@media(max-width:900px){.hero-stats{display:none;}.hero-inner{padding:0 24px;}.hero-scroll{left:24px;}}
+@media(max-width:900px){.hero-stats{display:none;}.hero-inner{padding:0 24px;}.hero-scroll{left:50% !important;transform:translateX(-50%) !important;}}
 
 /* ── SECTIONS COMMUNES ── */
 section { position:relative; }
