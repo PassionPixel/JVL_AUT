@@ -2,7 +2,7 @@
 <html lang="fr" style="background:#050505;">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <style>html,body{background:#050505;}</style>
 <!-- Preconnect pour chargement plus rapide -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,10 +75,10 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;overscroll-behavior-y:none;}
+body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;}
 html{overscroll-behavior-y:none;}
 body *{cursor:none !important;}
-@media(max-width:900px){body{cursor:auto;}body *{cursor:auto !important;}}
+@media(max-width:900px){body{cursor:auto;-webkit-overflow-scrolling:touch;}body *{cursor:auto !important;}}
 
 /* ── CURSOR — Blend Mode Apple ── */
 #cur{
