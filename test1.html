@@ -75,7 +75,8 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;overscroll-behavior-y:none;}
+html{overscroll-behavior-y:none;}
 body *{cursor:none !important;}
 @media(max-width:900px){body{cursor:auto;}body *{cursor:auto !important;}}
 
@@ -1613,6 +1614,7 @@ if (mobileMenu) {
   if(typeof gsap === 'undefined') return;
   const tcards = document.querySelectorAll('.tc');
   if(!tcards.length) return;
+  if(window.innerWidth <= 900) return;
 
   tcards.forEach((card, i) => {
     gsap.set(card, { opacity:0, x: i === 0 ? -80 : 80 });
@@ -1668,6 +1670,9 @@ document.querySelectorAll('.tc').forEach(card => {
   const leftBlock = document.getElementById('why-left-block');
   const cards = document.querySelectorAll('.why-card');
   if(!leftBlock || !cards.length) return;
+
+  // Sur mobile, pas d'animation X — évite le débordement horizontal
+  if(window.innerWidth <= 900) return;
 
   gsap.set(leftBlock, { opacity:0, x:-60 });
   gsap.set(cards, { opacity:0, x:80 });
