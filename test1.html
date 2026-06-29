@@ -1410,6 +1410,19 @@ body::after {
 </footer>
 
 <script>
+// ── MOBILE VIEWPORT HEIGHT FIX ──
+// Fixe la hauteur du hero au chargement sur mobile
+// pour éviter le redimensionnement quand la barre du navigateur apparaît/disparaît
+(function(){
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const hero = document.getElementById('hero');
+  if(isMobile && hero) {
+    const fixedH = document.documentElement.clientHeight;
+    hero.style.height = fixedH + 'px';
+    hero.style.minHeight = fixedH + 'px';
+  }
+})();
+
 gsap.registerPlugin(ScrollTrigger);
 
 // Optimisation ScrollTrigger — réduit les calculs inutiles
