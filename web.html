@@ -2,7 +2,7 @@
 <html lang="fr" style="background:#050505;">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <style>html,body{background:#050505;}</style>
 <!-- Preconnect pour chargement plus rapide -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,9 +75,10 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;}
+html{overscroll-behavior-y:unset;-webkit-overflow-scrolling:touch;}
 body *{cursor:none !important;}
-@media(max-width:900px){body{cursor:auto;}body *{cursor:auto !important;}}
+@media(max-width:900px){body{cursor:auto;-webkit-overflow-scrolling:touch;}body *{cursor:auto !important;}}
 
 /* ── CURSOR — Blend Mode Apple ── */
 #cur{
@@ -319,6 +320,7 @@ nav ul a:hover{color:var(--white);}
 
 /* ── HERO ── */
 #hero{height:100vh;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+@supports (height: 100svh) { #hero { height:100svh; } }
 /* ── VIDEO BG VIMEO ── */
 #hero-video-container {
   position: absolute; inset: 0;
@@ -331,8 +333,8 @@ nav ul a:hover{color:var(--white);}
   position: absolute;
   top: 50%; left: 50%;
   transform: translate3d(-50%, -50%, 0); /* GPU compositing */
-  width: 177.78vh;
-  height: 100vh;
+  width: 177.78svh;
+  height: 100svh;
   min-width: 100%;
   min-height: 56.25vw;
   pointer-events: none;
@@ -426,9 +428,9 @@ h1 em{font-style:italic;color:var(--chrome);}
 .wi:last-child{border-bottom:1px solid var(--border);}
 .wi:hover{padding-left:10px;}
 .wi-num{font-size:11px;color:rgba(14,165,233,0.6);font-weight:700;min-width:28px;padding-top:2px;letter-spacing:1px;}
-.wi h3{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;white-space:nowrap;}
+.wi h3{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;}
 .wi p{font-size:13px;color:var(--white70);line-height:1.7;font-weight:300;}
-@media(max-width:900px){.why-inner{grid-template-columns:1fr;gap:48px;}}
+@media(max-width:900px){.why-inner{grid-template-columns:1fr;gap:48px;}.wi h3{white-space:normal;font-size:14px;}}
 
 /* ── PROCESS ── */
 #process{background:var(--black2);contain:layout style;}
@@ -1409,6 +1411,25 @@ body::after {
 </footer>
 
 <script>
+// ── MOBILE VIEWPORT HEIGHT FIX ──
+(function(){
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const hero = document.getElementById('hero');
+  if(isMobile && hero) {
+    const fixedH = document.documentElement.clientHeight;
+    hero.style.height = fixedH + 'px';
+    hero.style.minHeight = fixedH + 'px';
+    // Fix le container vidéo
+    const container = document.getElementById('hero-video-container');
+    if(container) container.style.height = fixedH + 'px';
+    // Fix les layers vimeo
+    document.querySelectorAll('.hero-vimeo-layer').forEach(el => {
+      el.style.height = fixedH + 'px';
+      el.style.width = (fixedH * 1.7778) + 'px';
+    });
+  }
+})();
+
 gsap.registerPlugin(ScrollTrigger);
 
 // Optimisation ScrollTrigger — réduit les calculs inutiles
@@ -1599,6 +1620,7 @@ if (mobileMenu) {
   if(typeof gsap === 'undefined') return;
   const tcards = document.querySelectorAll('.tc');
   if(!tcards.length) return;
+  if(window.innerWidth <= 900) return;
 
   tcards.forEach((card, i) => {
     gsap.set(card, { opacity:0, x: i === 0 ? -80 : 80 });
@@ -1654,6 +1676,9 @@ document.querySelectorAll('.tc').forEach(card => {
   const leftBlock = document.getElementById('why-left-block');
   const cards = document.querySelectorAll('.why-card');
   if(!leftBlock || !cards.length) return;
+
+  // Sur mobile, pas d'animation X — évite le débordement horizontal
+  if(window.innerWidth <= 900) return;
 
   gsap.set(leftBlock, { opacity:0, x:-60 });
   gsap.set(cards, { opacity:0, x:80 });
