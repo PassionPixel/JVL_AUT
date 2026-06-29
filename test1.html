@@ -76,6 +76,7 @@ nav.scrolled ul a:hover { color:var(--green-mid); }
 .nav-cta { background:var(--green-deep) !important;color:var(--white) !important;padding:11px 26px;border-radius:2px;font-weight:500 !important;letter-spacing:.5px !important;transition:background .3s,transform .3s,box-shadow .3s !important; }
 .nav-cta::after { display:none !important; }
 .nav-cta:hover { background:var(--green-mid) !important;transform:translateY(-1px);box-shadow:0 8px 24px rgba(45,80,22,.25) !important; }
+.hamburger { display:none; }
 @media(max-width:900px){
   nav{padding:16px 24px;}
   nav ul{
@@ -1121,7 +1122,8 @@ if(hamburger) {
 // Nav scroll — passive pour ne pas bloquer le thread principal
 const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  navEl.classList.toggle('scrolled', window.scrollY > 60);
+  const threshold = window.innerWidth <= 900 ? 1 : 60;
+  navEl.classList.toggle('scrolled', window.scrollY > threshold);
 }, { passive: true });
 
 // Hero bg load animation
