@@ -24,7 +24,8 @@
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); overflow-x:hidden; cursor:none; }
+html { -webkit-overflow-scrolling:touch; }
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); overflow-x:hidden; cursor:none; overscroll-behavior-y:none; -webkit-overflow-scrolling:touch; }
 body * { cursor:none !important; }
 @media(max-width:900px){ body { cursor:auto; } body * { cursor:auto !important; } }
 
@@ -54,7 +55,7 @@ nav.scrolled {
   border-bottom:1px solid var(--border);
   box-shadow:0 2px 24px rgba(0,0,0,.06);
 }
-.logo { display:flex;align-items:center;gap:12px;text-decoration:none; }
+.logo { display:flex;align-items:center;gap:12px;text-decoration:none;-webkit-tap-highlight-color:transparent; }
 .logo-icon { width:36px;height:36px; }
 .logo-name { font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--cream);letter-spacing:1px;transition:color .7s cubic-bezier(.16,1,.3,1);display:flex;height:28px;align-items:center; }
 .logo-name span { color:inherit; }
@@ -75,11 +76,65 @@ nav.scrolled ul a:hover { color:var(--green-mid); }
 .nav-cta { background:var(--green-deep) !important;color:var(--white) !important;padding:11px 26px;border-radius:2px;font-weight:500 !important;letter-spacing:.5px !important;transition:background .3s,transform .3s,box-shadow .3s !important; }
 .nav-cta::after { display:none !important; }
 .nav-cta:hover { background:var(--green-mid) !important;transform:translateY(-1px);box-shadow:0 8px 24px rgba(45,80,22,.25) !important; }
-@media(max-width:900px){nav{padding:16px 24px;} nav ul{display:none;}}
+.hamburger { display:none; }
+@media(max-width:900px){
+  nav{padding:16px 24px;}
+  nav ul{
+    display:flex;flex-direction:column;gap:0;
+    position:fixed;top:0;left:0;right:0;
+    background:rgba(250,250,246,.97);backdrop-filter:blur(24px);
+    justify-content:flex-start;align-items:flex-start;
+    z-index:499;padding:100px 40px 48px;
+    transform:translateY(-100%);
+    transition:transform .6s cubic-bezier(.16,1,.3,1);
+    pointer-events:none;
+  }
+  nav ul.open{transform:translateY(0);pointer-events:all;}
+  nav ul li { opacity:0;transform:translateY(16px);transition:opacity .4s ease, transform .4s cubic-bezier(.16,1,.3,1); }
+  nav ul.open li:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.2s;}
+  nav ul.open li:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.28s;}
+  nav ul.open li:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.36s;}
+  nav ul.open li:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.44s;}
+  nav ul.open li:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.52s;}
+  nav ul a{
+    color:var(--green-deep) !important;
+    font-family:'Cormorant Garamond',serif;
+    font-size:36px;font-weight:300;
+    padding:12px 0;letter-spacing:1px;
+    border-bottom:1px solid rgba(45,80,22,.08);
+    width:100%;display:block;
+  }
+  nav ul a::after{display:none;}
+  nav ul li:last-child a{
+    font-family:'Jost',sans-serif;
+    font-size:13px;font-weight:500;
+    letter-spacing:2px;text-transform:uppercase;
+    color:var(--white) !important;
+    background:var(--green-deep);
+    padding:14px 28px;
+    border:none;margin-top:24px;
+    display:inline-block;width:auto;
+  }
+  .hamburger{
+    display:flex;flex-direction:column;gap:5px;cursor:pointer;z-index:501;
+    background:none;border:none;padding:4px;-webkit-tap-highlight-color:transparent;
+  }
+  .hamburger span{
+    display:block;width:24px;height:1.5px;
+    background:var(--cream);
+    transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s, background .7s;
+  }
+  nav.scrolled .hamburger span{background:var(--green-deep);}
+  .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+  .hamburger.open span{background:var(--green-deep) !important;}
+}
 
 /* ── HERO ── */
 #hero {
   height:100vh;min-height:650px;
+@supports (height: 100svh) { #hero { height:100svh; } }
   position:relative;overflow:hidden;
   display:flex;align-items:center;
 }
@@ -252,7 +307,13 @@ h2 em { font-style:italic;color:var(--green-mid); }
 .svc-photo.svc-in:hover img { transform:scale(1.04); }
 .svc-photo:active img { transform:scale(1.04); }
 
-@media(max-width:900px){.services-layout{grid-template-columns:1fr;}.services-right{display:none;}}
+@media(max-width:900px){
+  .services-layout{grid-template-columns:1fr;gap:48px;}
+  .services-right{display:block;height:520px;}
+  .about-grid{grid-template-columns:1fr;gap:48px;}
+  .about-imgs{order:2;height:400px;}
+  .about-text{order:1;}
+}
 
 /* ── RÉALISATIONS ── */
 #realisations { background:var(--green-mist);contain:layout style; }
@@ -291,11 +352,25 @@ h2 em { font-style:italic;color:var(--green-mid); }
 
 .rcard:first-child { grid-row:1/3; }
 @media(max-width:900px){.real-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}.rcard:first-child{grid-row:auto;}.pad{padding:80px 24px;}}
+.rcard:last-child:nth-child(odd):not(:first-child) { grid-column:1/3;max-width:50%;margin:0 auto; }
 
 /* ── ABOUT ── */
 #about { background:var(--white);contain:layout style; }
 .about-grid { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center; }
 .about-imgs { position:relative;height:560px; }
+
+/* Voile qui se retire */
+.about-imgs::after {
+  content:'';
+  position:absolute;inset:0;
+  background:var(--white);
+  transform:scaleX(1);
+  transform-origin:left;
+  transition:transform .9s cubic-bezier(.77,0,.18,1);
+  z-index:10;
+}
+.about-imgs.unveiled::after { transform:scaleX(0);transform-origin:right; }
+
 .about-img-main {
   position:absolute;top:0;left:0;right:60px;bottom:60px;
   border-radius:4px;overflow:hidden;
@@ -656,6 +731,9 @@ footer {
     <li><a href="#tarifs">Tarifs</a></li>
     <li><a href="#cta" class="nav-cta">Devis gratuit</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -755,22 +833,22 @@ footer {
 <section id="about">
   <div class="pad container">
     <div class="about-grid">
-      <div class="about-imgs reveal">
-        <div class="about-img-main"><img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=900&q=80" alt="Notre équipe au travail"></div>
-        <div class="about-img-accent"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80" alt="Détail jardin"></div>
-        <div class="about-badge"><div class="about-badge-num">15</div><div class="about-badge-lbl">ans d'expérience</div></div>
+      <div class="about-imgs" id="aboutImgs">
+        <div class="about-img-main" id="aboutImgMain"><img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=900&q=80" alt="Notre équipe au travail"></div>
+        <div class="about-img-accent" id="aboutImgAccent"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80" alt="Détail jardin"></div>
+        <div class="about-badge" id="aboutBadge"><div class="about-badge-num" id="aboutBadgeNum">0</div><div class="about-badge-lbl">ans d'expérience</div></div>
       </div>
-      <div class="about-text reveal" style="transition-delay:.2s">
-        <div class="eyebrow">À propos</div>
-        <h2>Une passion transmise de <em>génération en génération</em></h2>
-        <p>Fondée en 2009 par Thomas Verdura, notre entreprise familiale est née d'un amour profond pour la nature et les espaces verts. Aujourd'hui, une équipe de 8 paysagistes passionnés travaille à vos côtés.</p>
-        <p>Nous intervenons dans tout le Brabant Wallon avec une approche durable et respectueuse de l'environnement — plantes locales, compostage, gestion raisonnée de l'eau.</p>
-        <div class="about-values">
+      <div class="about-text" id="aboutText">
+        <div class="eyebrow" id="aboutEyebrow" style="opacity:0;transform:translateY(12px)">À propos</div>
+        <h2 id="aboutH2" style="opacity:0;transform:translateY(16px)">Une passion transmise de <em>génération en génération</em></h2>
+        <p id="aboutP1" style="opacity:0;transform:translateY(16px)">Fondée en 2009 par Thomas Verdura, notre entreprise familiale est née d'un amour profond pour la nature et les espaces verts. Aujourd'hui, une équipe de 8 paysagistes passionnés travaille à vos côtés.</p>
+        <p id="aboutP2" style="opacity:0;transform:translateY(16px)">Nous intervenons dans tout le Brabant Wallon avec une approche durable et respectueuse de l'environnement — plantes locales, compostage, gestion raisonnée de l'eau.</p>
+        <div class="about-values" id="aboutValues" style="opacity:0;transform:translateY(12px)">
           <div class="aval">Plantes locales et espèces résistantes</div>
           <div class="aval">Devis gratuit sous 48h</div>
           <div class="aval">Intervention dans un rayon de 30km</div>
         </div>
-        <div style="margin-top:36px"><a href="#cta" class="btn-primary">Nous contacter</a></div>
+        <div id="aboutCta" style="margin-top:36px;opacity:0;transform:translateY(12px)"><a href="#cta" class="btn-primary">Nous contacter</a></div>
       </div>
     </div>
   </div>
@@ -906,6 +984,17 @@ footer {
 
 <script>
 // Cursor feuille avec rotation — optimisé RAF
+// Mobile viewport height fix
+(function(){
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const hero = document.getElementById('hero');
+  if(isMobile && hero) {
+    const fixedH = document.documentElement.clientHeight;
+    hero.style.height = fixedH + 'px';
+    hero.style.minHeight = fixedH + 'px';
+  }
+})();
+
 const cur = document.getElementById('cur');
 let cx=0,cy=0,mx=0,my=0,px=0,py=0,rot=-30;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
@@ -1020,10 +1109,27 @@ document.querySelectorAll('a,button,.svc,.rcard,.tcard,.pstep,.tarif').forEach(e
   el.addEventListener('mouseleave', () => { cur.style.width='32px';cur.style.height='32px'; },{passive:true});
 });
 
+// Hamburger mobile
+const hamburger = document.getElementById('hamburger');
+if(hamburger) {
+  const navUl = document.querySelector('nav ul');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navUl.classList.toggle('open');
+  });
+  navUl.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navUl.classList.remove('open');
+    });
+  });
+}
+
 // Nav scroll — passive pour ne pas bloquer le thread principal
 const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  navEl.classList.toggle('scrolled', window.scrollY > 60);
+  const threshold = window.innerWidth <= 900 ? 1 : 60;
+  navEl.classList.toggle('scrolled', window.scrollY > threshold);
 }, { passive: true });
 
 // Hero bg load animation
@@ -1039,6 +1145,86 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
   el.style.transitionDelay = el.style.transitionDelay || (i % 4 * 0.06) + 's';
   io.observe(el);
 });
+
+// ── ABOUT — animation cinématique ──
+(function(){
+  const section = document.getElementById('about');
+  if(!section) return;
+
+  const imgs     = document.getElementById('aboutImgs');
+  const imgMain  = document.getElementById('aboutImgMain');
+  const imgAcc   = document.getElementById('aboutImgAccent');
+  const badge    = document.getElementById('aboutBadge');
+  const badgeNum = document.getElementById('aboutBadgeNum');
+  const eyebrow  = document.getElementById('aboutEyebrow');
+  const h2       = document.getElementById('aboutH2');
+  const p1       = document.getElementById('aboutP1');
+  const p2       = document.getElementById('aboutP2');
+  const values   = document.getElementById('aboutValues');
+  const cta      = document.getElementById('aboutCta');
+
+  // Init image accent et badge
+  imgAcc.style.opacity = '0';
+  imgAcc.style.transform = 'translateY(20px) scale(.97)';
+  badge.style.opacity = '0';
+  badge.style.transform = 'scale(.7)';
+
+  function reveal(el, delay, extra) {
+    setTimeout(() => {
+      el.style.transition = 'opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1)' + (extra||'');
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, delay);
+  }
+
+  function countUp(el, target, duration) {
+    const start = performance.now();
+    (function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round(p * target);
+      if(p < 1) requestAnimationFrame(step);
+    })(start);
+  }
+
+  // Observer 1 — Texte (déclenché quand le texte arrive)
+  const obsText = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obsText.unobserve(entry.target);
+    reveal(eyebrow,   0);
+    reveal(h2,      200);
+    reveal(p1,      400);
+    reveal(p2,      600);
+    reveal(values,  800);
+    reveal(cta,    1000);
+  }, { threshold: 0.15 });
+  obsText.observe(document.getElementById('aboutText'));
+
+  // Observer 2 — Images (déclenché quand les photos arrivent)
+  const obsImgs = new IntersectionObserver(([entry]) => {
+    if(!entry.isIntersecting) return;
+    obsImgs.unobserve(imgs);
+
+    // Voile se retire
+    imgs.classList.add('unveiled');
+
+    // Image accent
+    setTimeout(() => {
+      imgAcc.style.transition = 'opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1)';
+      imgAcc.style.opacity = '1';
+      imgAcc.style.transform = 'translateY(0) scale(1)';
+    }, 600);
+
+    // Badge pop
+    setTimeout(() => {
+      badge.style.transition = 'opacity .5s ease, transform .7s cubic-bezier(.34,1.56,.64,1)';
+      badge.style.opacity = '1';
+      badge.style.transform = 'scale(1)';
+      countUp(badgeNum, 15, 800);
+    }, 900);
+
+  }, { threshold: 0.2 });
+  obsImgs.observe(imgs);
+})();
 
 // Services photos — entrée directionnelle
 const servicesRight = document.querySelector('.services-right');
