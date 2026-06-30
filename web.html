@@ -457,7 +457,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 .comp-h em{font-style:italic;color:var(--chrome);}
 .comp-sub{font-size:14px;color:var(--white70);text-align:center;font-weight:300;margin-bottom:56px;line-height:1.7;}
 .ctable{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.ctg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;}
+.ctg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;}
 .ch{background:var(--black3);padding:16px 14px;text-align:center;font-size:12px;font-weight:600;color:var(--white70);border-bottom:1px solid var(--border);}
 .ch span{display:block;font-size:10px;color:var(--white40);font-weight:400;letter-spacing:.5px;margin-top:3px;}
 .ch.jvl{background:rgba(14,165,233,0.05);color:var(--blue2);border:1px solid rgba(14,165,233,0.15);}
@@ -484,7 +484,7 @@ h1 em{font-style:italic;color:var(--chrome);}
   }
   .col-hide-mobile { display:none !important; }
   .ctg .ch.jvl { font-size:12px; }
-  .ctg .ch:nth-child(4) { font-size:11px; }
+  .ctg .ch:nth-child(3) { font-size:11px; }
 }
 
 /* ── TARIFS ── */
@@ -1094,48 +1094,20 @@ body::after {
       <div class="ctg">
         <div class="che"></div>
         <div class="ch">Agence template<span>WordPress / Wix</span></div>
-        <div class="ch">Agence abonnement<span>Modèle location · sans propriété</span></div>
         <div class="ch">Agence premium<span>WordPress / Vue.js</span></div>
         <div class="ch jvl">JVL Automation<span>Code sur mesure · Sans CMS</span></div>
 
         <div class="cr">Prix setup</div>
         <div class="cc">1 500–2 500€</div>
-        <div class="cc">0–500€</div>
         <div class="cc">4 000–8 000€</div>
         <div class="cc jc" style="color:var(--blue2);font-weight:600">1 500–2 500€</div>
 
-        <div class="cr">Coût mensuel</div>
-        <div class="cc">~10€/mois</div>
-        <div class="cc">150–700€/mois</div>
-        <div class="cc">~10€/mois</div>
-        <div class="cc jc good">0€</div>
-
-        <div class="cr">Coût réel 3 ans</div>
-        <div class="cc">1 500–2 500€</div>
-        <div class="cc">jusqu'à 18 000€</div>
-        <div class="cc">4 360–8 360€</div>
-        <div class="cc jc good">1 500–2 500€</div>
-
         <div class="cr">Délai de livraison</div>
         <div class="cc">2–6 semaines</div>
-        <div class="cc">1–3 semaines</div>
         <div class="cc">6–10 semaines</div>
         <div class="cc jc good">5–15 jours</div>
 
-        <div class="cr">Vous possédez le site</div>
-        <div class="cc good">✓</div>
-        <div class="cc">✗</div>
-        <div class="cc good">✓</div>
-        <div class="cc jc good">✓</div>
-
-        <div class="cr">Hébergement</div>
-        <div class="cc">~10€/mois</div>
-        <div class="cc">Inclus abonnement</div>
-        <div class="cc">~10€/mois</div>
-        <div class="cc jc good">Gratuit</div>
-
         <div class="cr">Design sur mesure</div>
-        <div class="cc">~ Partiel</div>
         <div class="cc">~ Partiel</div>
         <div class="cc good">✓ Oui</div>
         <div class="cc jc good">✓ 100%</div>
@@ -1143,20 +1115,32 @@ body::after {
         <div class="cr">Vitesse chargement</div>
         <div class="cc">Moyenne</div>
         <div class="cc">Moyenne</div>
-        <div class="cc">Moyenne</div>
         <div class="cc jc good">Rapide</div>
 
         <div class="cr">Niveau de design</div>
-        <div class="cc"><span class="badge bas">Basique</span></div>
         <div class="cc"><span class="badge bas">Basique</span></div>
         <div class="cc"><span class="badge pr-green">Premium</span></div>
         <div class="cc jc"><span class="badge pr">Premium</span></div>
 
         <div class="cr">100% déductible</div>
         <div class="cc good">✓</div>
-        <div class="cc">Partiel</div>
         <div class="cc good">✓</div>
         <div class="cc jc good">✓</div>
+
+        <div class="cr">Code source fourni</div>
+        <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Partiel</span><span style="opacity:.6;font-size:10px">(dépend plateforme)</span></div></div>
+        <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Oui</span><span style="opacity:.6;font-size:10px">(parfois en option)</span></div></div>
+        <div class="cc jc good">✓ Toujours inclus</div>
+
+        <div class="cr">Animations sur mesure</div>
+        <div class="cc">Effets génériques</div>
+        <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Variable</span><span style="opacity:.6;font-size:10px">(selon agence)</span></div></div>
+        <div class="cc jc good">✓ Sans limite technique</div>
+
+        <div class="cr">Interlocuteur</div>
+        <div class="cc">1–2 personnes</div>
+        <div class="cc">3–5 personnes</div>
+        <div class="cc jc good">1 personne, direct</div>
       </div>
     </div>
   </div>
@@ -1753,10 +1737,10 @@ document.querySelectorAll('.tc').forEach(card => {
   const ctg = document.querySelector('.ctg');
   if (!ctg) return;
   const children = Array.from(ctg.children);
-  const COLS = 5;
+  const COLS = 4;
   children.forEach((el, i) => {
     const colPos = i % COLS;
-    if (colPos === 1 || colPos === 2) {
+    if (colPos === 1) {
       el.classList.add('col-hide-mobile');
     }
   });
@@ -1795,7 +1779,7 @@ document.querySelectorAll('.tc').forEach(card => {
 (function(){
   const ctg = document.querySelector('.ctg');
   if(!ctg) return;
-  const COLS = 5;
+  const COLS = 4;
   const children = Array.from(ctg.children);
   const rows = [];
   for(let i = 0; i < children.length; i += COLS) {
@@ -1812,7 +1796,7 @@ document.querySelectorAll('.tc').forEach(card => {
   });
 
   // Cellules colonne JVL (index 4)
-  const jvlCells = children.filter((_, i) => i % COLS === 4);
+  const jvlCells = children.filter((_, i) => i % COLS === 3);
 
   const obs = new IntersectionObserver(([entry]) => {
     if(!entry.isIntersecting) return;
