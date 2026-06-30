@@ -701,6 +701,15 @@ footer{background:var(--black2);border-top:1px solid var(--border);padding:48px 
 .sf-field select { appearance:none;cursor:pointer; }
 .sf-field select option { background:var(--black3);color:var(--white); }
 
+/* Neutralise l'autofill du navigateur (fond blanc/jaune) */
+.sf-field input:-webkit-autofill,
+.sf-field input:-webkit-autofill:hover,
+.sf-field input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.04) inset !important;
+  -webkit-text-fill-color: var(--white) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* ── BUDGET DROPDOWN CUSTOM ── */
 .sf-select { position:relative; }
 .sf-trigger {
@@ -1357,7 +1366,11 @@ body::after {
     <form action="https://formspree.io/f/xojbwanw" method="POST" class="sites-form rv" id="sitesForm">
       <div class="sf-grid">
         <div class="sf-field">
-          <label>Prénom & Nom</label>
+          <label>Prénom</label>
+          <input type="text" name="prenom" required>
+        </div>
+        <div class="sf-field">
+          <label>Nom</label>
           <input type="text" name="nom" required>
         </div>
         <div class="sf-field">
@@ -1367,21 +1380,6 @@ body::after {
         <div class="sf-field">
           <label>Secteur d'activité</label>
           <input type="text" name="secteur" placeholder="Restaurant, jardinier, coiffeur...">
-        </div>
-        <div class="sf-field">
-          <label>Budget approximatif</label>
-          <div class="sf-select" id="budgetSelect">
-            <div class="sf-trigger">
-              <span class="sf-value">Sélectionner...</span>
-              <svg class="sf-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="sf-dropdown">
-              <div class="sf-option" data-value="1 500 – 2 500€ (Sur mesure)">1 500 – 2 500€ &nbsp;·&nbsp; Sur mesure</div>
-              <div class="sf-option" data-value="2 000 – 3 700€ (Complet + Automation)">2 000 – 3 700€ &nbsp;·&nbsp; Complet + Automation</div>
-              <div class="sf-option" data-value="À définir ensemble">À définir ensemble</div>
-            </div>
-            <input type="hidden" name="budget" value="">
-          </div>
         </div>
         <div class="sf-field sf-full">
           <label>Décrivez votre projet</label>
