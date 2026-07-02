@@ -1607,12 +1607,21 @@ async function sendMsg() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: text, source: 'verdura-jardins' })
     });
-    const data = await res.json();
+
+    const rawText = await res.text();
+    console.log('Make.com raw response:', rawText);
+
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) { data = { response: rawText }; }
+
     hideTyping();
-    addMsg('bot', data.response || data.message || "Merci pour votre message ! Nous vous répondrons très bientôt.");
+    const reply = data.response || data.result || data.message || data.text || data.answer || rawText;
+    addMsg('bot', reply);
+
   } catch(e) {
     hideTyping();
-    addMsg('bot', "Une erreur est survenue. N'hésitez pas à nous contacter directement par téléphone.");
+    console.error('Chatbot error:', e);
+    addMsg('bot', "Erreur : " + e.message);
   }
 }
 
