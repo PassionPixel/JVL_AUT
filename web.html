@@ -14,14 +14,14 @@
 <link rel="dns-prefetch" href="https://f.vimeocdn.com">
 <link rel="dns-prefetch" href="https://fresnel.vimeocdn.com">
 <title>JVL — Sites Web Premium</title>
-<meta name="description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Livraison 5–15 jours, dès 1 500€.">
+<meta name="description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Livraison 5–15 jours, dès 1 200€.">
 <link rel="canonical" href="https://www.jvlautomation.com/web.html">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.jvlautomation.com/web.html">
 <meta property="og:title" content="JVL — Sites Web Premium">
-<meta property="og:description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Dès 1 500€.">
+<meta property="og:description" content="Sites web premium sur mesure pour PME — animations cinématiques, Three.js, GSAP. Sans WordPress, sans template. Dès 1 200€.">
 <meta property="og:image" content="https://www.jvlautomation.com/og-image-web.jpg">
 <meta property="og:locale" content="fr_BE">
 <meta property="og:site_name" content="JVL Automation">
@@ -29,7 +29,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="JVL — Sites Web Premium">
-<meta name="twitter:description" content="Sites web premium sur mesure — animations cinématiques, Three.js, GSAP. Dès 1 500€.">
+<meta name="twitter:description" content="Sites web premium sur mesure — animations cinématiques, Three.js, GSAP. Dès 1 200€.">
 <meta name="twitter:image" content="https://www.jvlautomation.com/og-image-web.jpg">
 
 <!-- Schema.org Service -->
@@ -48,7 +48,7 @@
   "offers": {
     "@type": "Offer",
     "priceCurrency": "EUR",
-    "lowPrice": "1500",
+    "lowPrice": "1200",
     "highPrice": "3500"
   }
 }
@@ -457,7 +457,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 .comp-h em{font-style:italic;color:var(--chrome);}
 .comp-sub{font-size:14px;color:var(--white70);text-align:center;font-weight:300;margin-bottom:56px;line-height:1.7;}
 .ctable{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.ctg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;}
+.ctg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;}
 .ch{background:var(--black3);padding:16px 14px;text-align:center;font-size:12px;font-weight:600;color:var(--white70);border-bottom:1px solid var(--border);}
 .ch span{display:block;font-size:10px;color:var(--white40);font-weight:400;letter-spacing:.5px;margin-top:3px;}
 .ch.jvl{background:rgba(14,165,233,0.05);color:var(--blue2);border:1px solid rgba(14,165,233,0.15);}
@@ -479,9 +479,10 @@ h1 em{font-style:italic;color:var(--chrome);}
 @media(max-width:900px){
   .ctable { overflow-x:auto;-webkit-overflow-scrolling:touch; }
   .ctg {
-    min-width: 640px;
-    grid-template-columns: 1.1fr 1fr 1fr 1fr !important;
+    min-width: 700px;
+    grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr !important;
   }
+  .col-hide-mobile { display:none !important; }
   .ctg .ch.jvl { font-size:11px; }
   .ctg .ch:nth-child(3) { font-size:10px; }
   .cc, .cr { font-size:11px;padding:10px 8px; }
@@ -513,7 +514,7 @@ h1 em{font-style:italic;color:var(--chrome);}
 .tgrid-2{grid-template-columns:repeat(2,1fr);max-width:900px;margin:0 auto;}
 .tc-price-sep{font-size:0.5em;opacity:0.4;margin:0 4px;}
 .tc-price-plus{font-size:0.6em;opacity:0.6;margin-right:2px;}
-.tc-note{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;margin-top:16px;font-style:italic;}
+.tc-note{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;margin-top:20px;margin-bottom:20px;font-style:italic;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);}
 .tc{background:var(--black2);padding:48px 40px;position:relative;border:1px solid rgba(255,255,255,0.08);border-radius:8px;transition:border-color .3s;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;}
 .tc:hover{border-color:rgba(255,255,255,0.4);}
 .tc::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,0.12),transparent 70%);transform:translate(-50%,-50%);top:var(--my,50%);left:var(--mx,50%);opacity:0;transition:opacity .2s;pointer-events:none;z-index:0;}
@@ -534,7 +535,31 @@ h1 em{font-style:italic;color:var(--chrome);}
 .tc-sep{width:32px;height:1px;background:var(--white12);margin-bottom:28px;}
 .tc-feats{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;flex-grow:1;}
 .tf{font-size:13px;color:var(--white70);display:flex;gap:10px;font-weight:300;align-items:flex-start;}
+.tf-sub{font-size:11px;color:var(--white40);margin-top:2px;font-weight:300;line-height:1.5;}
 .tf::before{content:'✓';color:rgba(14,165,233,0.8);flex-shrink:0;font-weight:700;margin-top:1px;}
+
+/* Tooltip */
+.tf-tooltip { position:relative;display:inline-flex;align-items:center;gap:6px; }
+.tf-tooltip-icon {
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(14,165,233,0.4);
+  color:rgba(14,165,233,0.6);font-size:9px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:default;flex-shrink:0;
+}
+.tf-tooltip-box {
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  background:rgba(14,12,10,.95);border:1px solid rgba(14,165,233,.2);
+  border-radius:8px;padding:12px 14px;
+  font-size:11px;color:var(--white70);line-height:1.6;font-weight:300;
+  width:260px;pointer-events:none;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .2s ease, transform .2s ease;
+  z-index:100;white-space:normal;
+  backdrop-filter:blur(12px);
+}
+.tf-tooltip:hover .tf-tooltip-box { opacity:1;transform:translateY(0); }
+@media(max-width:900px){ .tf-tooltip-box { width:220px; } }
 .tc-cta{
   display:block;text-align:center;
   border:1px solid var(--border);color:var(--chrome);
@@ -1094,51 +1119,73 @@ body::after {
       <div class="ctg">
         <div class="che"></div>
         <div class="ch">Agence template<span>WordPress / Wix</span></div>
+        <div class="ch">Freelance location<span>Abonnement mensuel</span></div>
         <div class="ch">Agence premium<span>WordPress / Vue.js</span></div>
         <div class="ch jvl">JVL Automation<span>Code sur mesure · Sans CMS</span></div>
 
         <div class="cr">Prix setup</div>
-        <div class="cc">1 500–2 500€</div>
+        <div class="cc">1 200–2 500€</div>
+        <div class="cc">0–200€</div>
         <div class="cc">4 000–8 000€</div>
-        <div class="cc jc" style="color:var(--blue2);font-weight:600">1 500–2 500€</div>
+        <div class="cc jc" style="color:var(--blue2);font-weight:600">1 200–2 500€</div>
+
+        <div class="cr">Coût mensuel</div>
+        <div class="cc">~10€/mois</div>
+        <div class="cc">100–200€/mois</div>
+        <div class="cc">~10€/mois</div>
+        <div class="cc jc good">0€</div>
+
+        <div class="cr">Coût sur 3 ans</div>
+        <div class="cc">1 560–2 860€</div>
+        <div class="cc">3 600–7 200€</div>
+        <div class="cc">4 360–8 360€</div>
+        <div class="cc jc good" style="color:var(--blue2);font-weight:600">1 200–2 500€</div>
 
         <div class="cr">Délai de livraison</div>
         <div class="cc">2–6 semaines</div>
+        <div class="cc">1–2 semaines</div>
         <div class="cc">6–10 semaines</div>
         <div class="cc jc good">5–15 jours</div>
 
         <div class="cr">Design sur mesure</div>
         <div class="cc">~ Partiel</div>
         <div class="cc good">✓ Oui</div>
+        <div class="cc good">✓ Oui</div>
         <div class="cc jc good">✓ 100%</div>
 
         <div class="cr">Vitesse chargement</div>
         <div class="cc">Moyenne</div>
         <div class="cc">Moyenne</div>
+        <div class="cc good">Rapide</div>
         <div class="cc jc good">Rapide</div>
 
         <div class="cr">Niveau de design</div>
         <div class="cc"><span class="badge bas">Basique</span></div>
+        <div class="cc"><span class="badge bas">Variable</span></div>
         <div class="cc"><span class="badge pr-green">Premium</span></div>
         <div class="cc jc"><span class="badge pr">Premium</span></div>
 
         <div class="cr">100% déductible</div>
         <div class="cc good">✓</div>
         <div class="cc good">✓</div>
+        <div class="cc good">✓</div>
         <div class="cc jc good">✓</div>
 
         <div class="cr">Code source fourni</div>
         <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Partiel</span><span style="opacity:.6;font-size:10px">(dépend plateforme)</span></div></div>
+        <div class="cc">✗</div>
         <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Oui</span><span style="opacity:.6;font-size:10px">(parfois en option)</span></div></div>
         <div class="cc jc good">✓ Toujours inclus</div>
 
         <div class="cr">Animations sur mesure</div>
         <div class="cc">Effets génériques</div>
+        <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Variable</span><span style="opacity:.6;font-size:10px">(selon freelance)</span></div></div>
         <div class="cc"><div style="display:flex;flex-direction:column;gap:2px;"><span>Variable</span><span style="opacity:.6;font-size:10px">(selon agence)</span></div></div>
         <div class="cc jc good">✓ Sans limite technique</div>
 
         <div class="cr">Interlocuteur</div>
         <div class="cc">1–2 personnes</div>
+        <div class="cc">1 personne</div>
         <div class="cc">3–5 personnes</div>
         <div class="cc jc good">1 personne, direct</div>
       </div>
@@ -1236,13 +1283,13 @@ body::after {
 <section id="tarifs">
   <div class="si">
     <div class="tarifs-tag rv">Tarifs</div>
-    <h2 class="tarifs-h rv">Des prix <em>honnêtes</em></h2>
-    <p class="tarifs-sub rv">One-shot · Hébergement gratuit · 100% déductible</p>
+    <h2 class="tarifs-h rv">Transparent,<br><em>sans surprise.</em></h2>
+    <p class="tarifs-sub rv">One-shot · Hébergement gratuit · <strong style="color:var(--blue2)">100% déductible fiscalement</strong></p>
     <div class="tgrid tgrid-2">
       <div class="tc">
         <div class="tc-tag">Site vitrine premium</div>
         <div class="tc-name">Sur mesure</div>
-        <div class="tc-price"><sup>€</sup>1 500<span class="tc-price-sep">–</span>2 500</div>
+        <div class="tc-price"><sup>€</sup>1 200<span class="tc-price-sep">–</span>2 500</div>
         <div class="tc-period">one-shot · hébergement gratuit · selon complexité</div>
         <div class="tc-sep"></div>
         <div class="tc-feats">
@@ -1258,23 +1305,34 @@ body::after {
           <div class="tf">Mobile responsive</div>
           <div class="tf">Intégration réservations / paiements</div>
           <div class="tf">Mise en ligne incluse</div>
+          <div class="tf">
+            <span style="display:flex;flex-direction:column;gap:4px;">
+              <span class="tf-tooltip">
+                Chatbot IA & Automation sur mesure
+                <span class="tf-tooltip-icon">i</span>
+                <span class="tf-tooltip-box">Répond à vos visiteurs 24h/24, collecte les coordonnées, détecte les demandes de devis et vous prévient, vous envoie un résumé chaque soir — chaque système est conçu selon vos besoins spécifiques</span>
+              </span>
+            </span>
+          </div>
         </div>
         <p class="tc-note">Le tarif final dépend de la complexité du projet — défini ensemble lors de l'audit gratuit.</p>
         <a href="#cta" class="tc-cta">Démarrer →</a>
       </div>
       <div class="tc best" style="transition-delay:.1s">
-        <div class="tc-tag">Automation</div>
+        <div class="tc-tag">Automation <span style="font-size:10px;opacity:.6;font-weight:300;letter-spacing:1px;">— optionnel</span></div>
         <div class="tc-name">Sur mesure</div>
-        <div class="tc-price"><span class="tc-price-plus">+</span><sup>€</sup>800<span class="tc-price-sep">–</span>1 200</div>
-        <div class="tc-period">en plus du site · retainer optionnel</div>
+        <div class="tc-price"><span class="tc-price-plus">+</span><sup>€</sup>400<span class="tc-price-sep">–</span>1 200</div>
+        <div class="tc-period">en plus du site · selon complexité</div>
         <div class="tc-sep"></div>
         <div class="tc-feats">
-          <div class="tf">Plusieurs automatisations</div>
-          <div class="tf">Emails / notifications automatiques</div>
-          <div class="tf">Dashboard de suivi en temps réel</div>
-          <div class="tf">Suivi & support 3 mois</div>
+          <div class="tf">Emails & notifications automatiques</div>
+          <div class="tf">Réservation en ligne & prise de RDV automatisés</div>
+          <div class="tf">Synchronisation agenda & Google Calendar</div>
+          <div class="tf">Rappels automatiques aux clients</div>
+          <div class="tf">Devis & factures automatiques</div>
+          <div class="tf">Suivi dashboard temps réel</div>
         </div>
-        <p class="tc-note">Ajouté à votre site sur mesure (1 500–2 500€) — total selon vos automatisations.</p>
+        <p class="tc-note">Ce ne sont que des exemples — tout ce qui est manuel peut être automatisé.</p>
         <a href="#cta" class="tc-cta">Démarrer →</a>
       </div>
     </div>
@@ -1767,7 +1825,7 @@ document.querySelectorAll('.tc').forEach(card => {
 (function(){
   const ctg = document.querySelector('.ctg');
   if(!ctg) return;
-  const COLS = 4;
+  const COLS = 5;
   const children = Array.from(ctg.children);
   const rows = [];
   for(let i = 0; i < children.length; i += COLS) {
@@ -1784,7 +1842,7 @@ document.querySelectorAll('.tc').forEach(card => {
   });
 
   // Cellules colonne JVL (index 4)
-  const jvlCells = children.filter((_, i) => i % COLS === 3);
+  const jvlCells = children.filter((_, i) => i % COLS === 4);
 
   const obs = new IntersectionObserver(([entry]) => {
     if(!entry.isIntersecting) return;
